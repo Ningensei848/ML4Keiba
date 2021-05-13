@@ -1,13 +1,21 @@
 {
     "@context": {
         "@version": 1.1,
+        "rdfs": {
+            "@id": "http://www.w3.org/2000/01/rdf-schema#",
+            "@type": "@id"
+        },
+        "xsd": {
+            "@id": "http://www.w3.org/2001/XMLSchema",
+            "@type": "@id"
+        },
         "schema": {
             "@id": "http://schema.org/",
             "@type": "@id"
         },
         "name": {
             "@id": "schema:name",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "wd": {
             "@id": "https://www.wikidata.org/entity/",
@@ -27,7 +35,7 @@
         },
         "title": {
             "@id": "dcterms:title",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "outer_loop": {
             "@id": "wd:Q7112024",
@@ -35,11 +43,11 @@
         },
         "field": {
             "@id": "wd:Q17116231",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "direction": {
             "@id": "wd:Q504111",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "distance": {
             "@id": "wd:Q126017",
@@ -47,31 +55,31 @@
         },
         "weather": {
             "@id": "wd:Q11663",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "going": {
             "@id": "wd:Q7831528",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "start_at": {
             "@id": "wd:Q24575110",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "date": {
             "@id": "wd:Q205892",
-            "@type": "@id"
+            "@type": "xsd:dateTime"
         },
         "course_info": {
             "@id": "wd:Q1751609",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "requirements": {
             "@id": "wd:Q2122052",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "rule": {
             "@id": "wd:Q1151067",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "runner": {
             "@id": "wd:Q2442470",
@@ -107,7 +115,7 @@
         },
         "member_of": {
             "@id": "wdt:P463",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "owner": {
             "@id": "wdt:P127",
@@ -123,7 +131,7 @@
         },
         "organism": {
             "@id": "wd:Q7239",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "age": {
             "@id": "wd:Q100343219",
@@ -135,7 +143,7 @@
         },
         "racetime": {
             "@id": "wdt:P2781",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "race_result": {
             "@id": "wd:Q54933017",
@@ -143,7 +151,7 @@
         },
         "diff_order": {
             "@id": "wd:Q10862449",
-            "@type": "@id"
+            "@type": "rdfs:Literal"
         },
         "rank_at_corner": {
             "@id": "wd:Q526719",
@@ -160,7 +168,7 @@
         },
         "odds_rank": {
             "@id": "wd:Q4120621",
-            "@type": "@id"
+            "@type": "xsd:integer"
         },
         "body": {
             "@id": "wd:Q170494",
@@ -192,7 +200,7 @@
         },
         "refund": {
             "@id": "wd:Q28451489",
-            "@type": "@id"
+            "@type": "xsd:integer"
         },
         "win": {
             "@id": "baken:tansyo",
@@ -228,7 +236,7 @@
         },
         "spacing_on_corner": {
             "@id": "wd:Q56316565",
-            "@type": "@id",
+            "@type": "rdfs:Literal",
             "@container": "@list"
         },
         "lap": {
