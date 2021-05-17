@@ -2,7 +2,7 @@
     "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/contexts.jsonld",
     "@id": "race_id:202007020610",
     "@type": "wd:Q3001412",
-    "title": "夕月特別 ",
+    "title": "夕月特別",
     "grade": "non graded",
     "track_surface": "芝",
     "direction": "左",
@@ -60,7 +60,8 @@
             "odds": 2.2,
             "odds_rank": 1,
             "body": {
-                "@id": "horse_id:2017106583#202007020610",
+                "@id": "horse_id:2017106583",
+                "run_for": "race_id:202007020610",
                 "weight": 470.0,
                 "gain": 4.0
             },
@@ -104,7 +105,8 @@
             "odds": 3.9,
             "odds_rank": 2,
             "body": {
-                "@id": "horse_id:2017103020#202007020610",
+                "@id": "horse_id:2017103020",
+                "run_for": "race_id:202007020610",
                 "weight": 450.0,
                 "gain": 2.0
             },
@@ -148,7 +150,8 @@
             "odds": 115.6,
             "odds_rank": 9,
             "body": {
-                "@id": "horse_id:2015105960#202007020610",
+                "@id": "horse_id:2015105960",
+                "run_for": "race_id:202007020610",
                 "weight": 442.0,
                 "gain": 4.0
             },
@@ -192,7 +195,8 @@
             "odds": 56.0,
             "odds_rank": 8,
             "body": {
-                "@id": "horse_id:2013103160#202007020610",
+                "@id": "horse_id:2013103160",
+                "run_for": "race_id:202007020610",
                 "weight": 430.0,
                 "gain": -2.0
             },
@@ -236,7 +240,8 @@
             "odds": 6.9,
             "odds_rank": 4,
             "body": {
-                "@id": "horse_id:2016101958#202007020610",
+                "@id": "horse_id:2016101958",
+                "run_for": "race_id:202007020610",
                 "weight": 462.0,
                 "gain": -2.0
             },
@@ -280,7 +285,8 @@
             "odds": 13.4,
             "odds_rank": 5,
             "body": {
-                "@id": "horse_id:2016104407#202007020610",
+                "@id": "horse_id:2016104407",
+                "run_for": "race_id:202007020610",
                 "weight": 490.0,
                 "gain": 8.0
             },
@@ -324,7 +330,8 @@
             "odds": 38.3,
             "odds_rank": 7,
             "body": {
-                "@id": "horse_id:2015110002#202007020610",
+                "@id": "horse_id:2015110002",
+                "run_for": "race_id:202007020610",
                 "weight": 480.0,
                 "gain": 8.0
             },
@@ -368,7 +375,8 @@
             "odds": 14.8,
             "odds_rank": 6,
             "body": {
-                "@id": "horse_id:2016104698#202007020610",
+                "@id": "horse_id:2016104698",
+                "run_for": "race_id:202007020610",
                 "weight": 436.0,
                 "gain": -8.0
             },
@@ -412,7 +420,8 @@
             "odds": 4.8,
             "odds_rank": 3,
             "body": {
-                "@id": "horse_id:2015102595#202007020610",
+                "@id": "horse_id:2015102595",
+                "run_for": "race_id:202007020610",
                 "weight": 454.0,
                 "gain": -6.0
             },
@@ -421,84 +430,96 @@
     ],
     "dividend": [
         {
-            "@id": "race_id:202007020610#単勝",
+            "@id": "win:_202007020610",
+            "@type": "baken:win",
             "name": "単勝",
             "official": "8",
             "refund": "220",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202007020610#複勝_1",
+            "@id": "place:_202007020610",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "8",
             "refund": "120",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202007020610#複勝_2",
+            "@id": "place:_202007020610",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "3",
             "refund": "150",
             "odds_rank": "2"
         },
         {
-            "@id": "race_id:202007020610#複勝_3",
+            "@id": "place:_202007020610",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "6",
             "refund": "1,540",
             "odds_rank": "9"
         },
         {
-            "@id": "race_id:202007020610#枠連",
+            "@id": "bracket_quinella:_202007020610",
+            "@type": "baken:bracket_quinella",
             "name": "枠連",
             "official": "3-8",
             "refund": "360",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202007020610#馬連",
+            "@id": "quinella:_202007020610",
+            "@type": "baken:quinella",
             "name": "馬連",
             "official": "3-8",
             "refund": "450",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202007020610#ワイド_1",
+            "@id": "quinella_place:_202007020610",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "3-8",
             "refund": "240",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202007020610#ワイド_2",
+            "@id": "quinella_place:_202007020610",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "6-8",
             "refund": "3,910",
             "odds_rank": "28"
         },
         {
-            "@id": "race_id:202007020610#ワイド_3",
+            "@id": "quinella_place:_202007020610",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "3-6",
             "refund": "5,950",
             "odds_rank": "30"
         },
         {
-            "@id": "race_id:202007020610#馬単",
+            "@id": "exacta:_202007020610",
+            "@type": "baken:exacta",
             "name": "馬単",
             "official": "8=>3",
             "refund": "710",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202007020610#三連複",
+            "@id": "trio:_202007020610",
+            "@type": "baken:trio",
             "name": "三連複",
             "official": "3-6-8",
             "refund": "10930",
             "odds_rank": "31"
         },
         {
-            "@id": "race_id:202007020610#三連単",
+            "@id": "tierce:_202007020610",
+            "@type": "baken:tierce",
             "name": "三連単",
             "official": "8=>3=>6",
             "refund": "29700",
@@ -511,9 +532,6 @@
         "(*3,6)(1,2,4)5,8,9,7",
         "3,6(1,2,4)(8,5)(7,9)"
     ],
-    "racetime": {
-        "@id": "race_id:202007020610#racetime",
-        "lap": "12.9 - 11.9 - 12.5 - 12.4 - 12.1 - 11.8 - 11.6 - 11.5 - 11.6 - 11.7",
-        "pacemaker": "12.9 - 24.8 - 37.3 - 49.7 - 61.8 - 73.6 - 85.2 - 96.7 - 108.3 - 120.0 (37.3-34.8)"
-    }
+    "lap": "12.9 - 11.9 - 12.5 - 12.4 - 12.1 - 11.8 - 11.6 - 11.5 - 11.6 - 11.7",
+    "pacemaker": "12.9 - 24.8 - 37.3 - 49.7 - 61.8 - 73.6 - 85.2 - 96.7 - 108.3 - 120.0 (37.3-34.8)"
 }

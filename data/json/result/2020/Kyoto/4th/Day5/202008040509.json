@@ -2,7 +2,7 @@
     "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/contexts.jsonld",
     "@id": "race_id:202008040509",
     "@type": "wd:Q3001412",
-    "title": "トルマリンステークス ",
+    "title": "トルマリンステークス",
     "grade": "non graded",
     "outer_loop": true,
     "track_surface": "芝",
@@ -59,7 +59,8 @@
             "odds": 1.7,
             "odds_rank": 1,
             "body": {
-                "@id": "horse_id:2017102822#202008040509",
+                "@id": "horse_id:2017102822",
+                "run_for": "race_id:202008040509",
                 "weight": 486.0,
                 "gain": 4.0
             },
@@ -101,7 +102,8 @@
             "odds": 6.0,
             "odds_rank": 3,
             "body": {
-                "@id": "horse_id:2016104416#202008040509",
+                "@id": "horse_id:2016104416",
+                "run_for": "race_id:202008040509",
                 "weight": 466.0,
                 "gain": 0.0
             },
@@ -143,7 +145,8 @@
             "odds": 3.8,
             "odds_rank": 2,
             "body": {
-                "@id": "horse_id:2015101633#202008040509",
+                "@id": "horse_id:2015101633",
+                "run_for": "race_id:202008040509",
                 "weight": 468.0,
                 "gain": 0.0
             },
@@ -185,7 +188,8 @@
             "odds": 10.2,
             "odds_rank": 4,
             "body": {
-                "@id": "horse_id:2015104183#202008040509",
+                "@id": "horse_id:2015104183",
+                "run_for": "race_id:202008040509",
                 "weight": 444.0,
                 "gain": 12.0
             },
@@ -227,7 +231,8 @@
             "odds": 28.9,
             "odds_rank": 7,
             "body": {
-                "@id": "horse_id:2014102151#202008040509",
+                "@id": "horse_id:2014102151",
+                "run_for": "race_id:202008040509",
                 "weight": 506.0,
                 "gain": 4.0
             },
@@ -269,7 +274,8 @@
             "odds": 24.2,
             "odds_rank": 6,
             "body": {
-                "@id": "horse_id:2016104776#202008040509",
+                "@id": "horse_id:2016104776",
+                "run_for": "race_id:202008040509",
                 "weight": 448.0,
                 "gain": 20.0
             },
@@ -311,7 +317,8 @@
             "odds": 12.3,
             "odds_rank": 5,
             "body": {
-                "@id": "horse_id:2015104453#202008040509",
+                "@id": "horse_id:2015104453",
+                "run_for": "race_id:202008040509",
                 "weight": 464.0,
                 "gain": 4.0
             },
@@ -320,70 +327,80 @@
     ],
     "dividend": [
         {
-            "@id": "race_id:202008040509#単勝",
+            "@id": "win:_202008040509",
+            "@type": "baken:win",
             "name": "単勝",
             "official": "4",
             "refund": "170",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202008040509#複勝_1",
+            "@id": "place:_202008040509",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "4",
             "refund": "110",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202008040509#複勝_2",
+            "@id": "place:_202008040509",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "1",
             "refund": "220",
             "odds_rank": "3"
         },
         {
-            "@id": "race_id:202008040509#馬連",
+            "@id": "quinella:_202008040509",
+            "@type": "baken:quinella",
             "name": "馬連",
             "official": "1-4",
             "refund": "470",
             "odds_rank": "2"
         },
         {
-            "@id": "race_id:202008040509#ワイド_1",
+            "@id": "quinella_place:_202008040509",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "1-4",
             "refund": "210",
             "odds_rank": "2"
         },
         {
-            "@id": "race_id:202008040509#ワイド_2",
+            "@id": "quinella_place:_202008040509",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "4-7",
             "refund": "140",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202008040509#ワイド_3",
+            "@id": "quinella_place:_202008040509",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "1-7",
             "refund": "290",
             "odds_rank": "5"
         },
         {
-            "@id": "race_id:202008040509#馬単",
+            "@id": "exacta:_202008040509",
+            "@type": "baken:exacta",
             "name": "馬単",
             "official": "4=>1",
             "refund": "650",
             "odds_rank": "2"
         },
         {
-            "@id": "race_id:202008040509#三連複",
+            "@id": "trio:_202008040509",
+            "@type": "baken:trio",
             "name": "三連複",
             "official": "1-4-7",
             "refund": "450",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:202008040509#三連単",
+            "@id": "tierce:_202008040509",
+            "@type": "baken:tierce",
             "name": "三連単",
             "official": "4=>1=>7",
             "refund": "1570",
@@ -394,9 +411,6 @@
         "4(1,6)3,2(7,5)",
         "4(1,6)3,2,5,7"
     ],
-    "racetime": {
-        "@id": "race_id:202008040509#racetime",
-        "lap": "13.2 - 12.2 - 12.5 - 12.5 - 11.6 - 11.1 - 11.3 - 11.6",
-        "pacemaker": "13.2 - 25.4 - 37.9 - 50.4 - 62.0 - 73.1 - 84.4 - 96.0 (37.9-34.0)"
-    }
+    "lap": "13.2 - 12.2 - 12.5 - 12.5 - 11.6 - 11.1 - 11.3 - 11.6",
+    "pacemaker": "13.2 - 25.4 - 37.9 - 50.4 - 62.0 - 73.1 - 84.4 - 96.0 (37.9-34.0)"
 }
