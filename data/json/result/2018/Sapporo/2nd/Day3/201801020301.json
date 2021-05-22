@@ -60,7 +60,8 @@
             "odds": 7.2,
             "odds_rank": 3,
             "body": {
-                "@id": "horse_id:2016103402#201801020301",
+                "@id": "horse_id:2016103402",
+                "run_for": "race_id:201801020301",
                 "weight": 472.0,
                 "gain": 2.0
             },
@@ -102,7 +103,8 @@
             "odds": 4.4,
             "odds_rank": 2,
             "body": {
-                "@id": "horse_id:2016100105#201801020301",
+                "@id": "horse_id:2016100105",
+                "run_for": "race_id:201801020301",
                 "weight": 474.0,
                 "gain": -2.0
             },
@@ -144,7 +146,8 @@
             "odds": 1.8,
             "odds_rank": 1,
             "body": {
-                "@id": "horse_id:2016103281#201801020301",
+                "@id": "horse_id:2016103281",
+                "run_for": "race_id:201801020301",
                 "weight": 464.0,
                 "gain": -2.0
             },
@@ -186,7 +189,8 @@
             "odds": 92.4,
             "odds_rank": 8,
             "body": {
-                "@id": "horse_id:2016105318#201801020301",
+                "@id": "horse_id:2016105318",
+                "run_for": "race_id:201801020301",
                 "weight": 432.0,
                 "gain": -10.0
             },
@@ -228,7 +232,8 @@
             "odds": 14.2,
             "odds_rank": 5,
             "body": {
-                "@id": "horse_id:2016104201#201801020301",
+                "@id": "horse_id:2016104201",
+                "run_for": "race_id:201801020301",
                 "weight": 462.0,
                 "gain": 6.0
             },
@@ -270,7 +275,8 @@
             "odds": 7.2,
             "odds_rank": 4,
             "body": {
-                "@id": "horse_id:2016106283#201801020301",
+                "@id": "horse_id:2016106283",
+                "run_for": "race_id:201801020301",
                 "weight": 480.0,
                 "gain": -4.0
             },
@@ -312,7 +318,8 @@
             "odds": 28.9,
             "odds_rank": 6,
             "body": {
-                "@id": "horse_id:2016101030#201801020301",
+                "@id": "horse_id:2016101030",
+                "run_for": "race_id:201801020301",
                 "weight": 414.0,
                 "gain": 6.0
             },
@@ -354,7 +361,8 @@
             "odds": 39.3,
             "odds_rank": 7,
             "body": {
-                "@id": "horse_id:2016100066#201801020301",
+                "@id": "horse_id:2016100066",
+                "run_for": "race_id:201801020301",
                 "weight": 436.0,
                 "gain": 2.0
             },
@@ -363,77 +371,88 @@
     ],
     "dividend": [
         {
-            "@id": "race_id:201801020301#単勝",
+            "@id": "win:_201801020301",
+            "@type": "baken:win",
             "name": "単勝",
             "official": "1",
             "refund": "720",
             "odds_rank": "3"
         },
         {
-            "@id": "race_id:201801020301#複勝_1",
+            "@id": "place:_201801020301",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "1",
             "refund": "140",
             "odds_rank": "3"
         },
         {
-            "@id": "race_id:201801020301#複勝_2",
+            "@id": "place:_201801020301",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "5",
             "refund": "130",
             "odds_rank": "2"
         },
         {
-            "@id": "race_id:201801020301#複勝_3",
+            "@id": "place:_201801020301",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "4",
             "refund": "110",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:201801020301#馬連",
+            "@id": "quinella:_201801020301",
+            "@type": "baken:quinella",
             "name": "馬連",
             "official": "1-5",
             "refund": "1670",
             "odds_rank": "5"
         },
         {
-            "@id": "race_id:201801020301#ワイド_1",
+            "@id": "quinella_place:_201801020301",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "1-5",
             "refund": "280",
             "odds_rank": "5"
         },
         {
-            "@id": "race_id:201801020301#ワイド_2",
+            "@id": "quinella_place:_201801020301",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "1-4",
             "refund": "180",
             "odds_rank": "2"
         },
         {
-            "@id": "race_id:201801020301#ワイド_3",
+            "@id": "quinella_place:_201801020301",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "4-5",
             "refund": "180",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:201801020301#馬単",
+            "@id": "exacta:_201801020301",
+            "@type": "baken:exacta",
             "name": "馬単",
             "official": "1=>5",
             "refund": "3390",
             "odds_rank": "12"
         },
         {
-            "@id": "race_id:201801020301#三連複",
+            "@id": "trio:_201801020301",
+            "@type": "baken:trio",
             "name": "三連複",
             "official": "1-4-5",
             "refund": "610",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:201801020301#三連単",
+            "@id": "tierce:_201801020301",
+            "@type": "baken:tierce",
             "name": "三連単",
             "official": "1=>5=>4",
             "refund": "6820",
@@ -444,9 +463,6 @@
         "(*4,5)-1,2(3,8)-(7,6)",
         "(*4,5)-1-2,3,8,6,7"
     ],
-    "racetime": {
-        "@id": "race_id:201801020301#racetime",
-        "lap": "12.4 - 11.0 - 11.4 - 11.6 - 12.9",
-        "pacemaker": "12.4 - 23.4 - 34.8 - 46.4 - 59.3 (34.8-35.9)"
-    }
+    "lap": "12.4 - 11.0 - 11.4 - 11.6 - 12.9",
+    "pacemaker": "12.4 - 23.4 - 34.8 - 46.4 - 59.3 (34.8-35.9)"
 }

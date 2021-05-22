@@ -61,7 +61,8 @@
             "odds": 1.9,
             "odds_rank": 1,
             "body": {
-                "@id": "horse_id:2013106121#201805010212",
+                "@id": "horse_id:2013106121",
+                "run_for": "race_id:201805010212",
                 "weight": 488.0,
                 "gain": 2.0
             },
@@ -104,7 +105,8 @@
             "odds": 3.8,
             "odds_rank": 2,
             "body": {
-                "@id": "horse_id:2014105836#201805010212",
+                "@id": "horse_id:2014105836",
+                "run_for": "race_id:201805010212",
                 "weight": 486.0,
                 "gain": 0.0
             },
@@ -147,7 +149,8 @@
             "odds": 7.2,
             "odds_rank": 4,
             "body": {
-                "@id": "horse_id:2014103577#201805010212",
+                "@id": "horse_id:2014103577",
+                "run_for": "race_id:201805010212",
                 "weight": 464.0,
                 "gain": -8.0
             },
@@ -190,7 +193,8 @@
             "odds": 14.6,
             "odds_rank": 5,
             "body": {
-                "@id": "horse_id:2011104228#201805010212",
+                "@id": "horse_id:2011104228",
+                "run_for": "race_id:201805010212",
                 "weight": 490.0,
                 "gain": 0.0
             },
@@ -233,7 +237,8 @@
             "odds": 114.3,
             "odds_rank": 9,
             "body": {
-                "@id": "horse_id:2014103335#201805010212",
+                "@id": "horse_id:2014103335",
+                "run_for": "race_id:201805010212",
                 "weight": 444.0,
                 "gain": -2.0
             },
@@ -276,7 +281,8 @@
             "odds": 17.2,
             "odds_rank": 6,
             "body": {
-                "@id": "horse_id:2014101754#201805010212",
+                "@id": "horse_id:2014101754",
+                "run_for": "race_id:201805010212",
                 "weight": 528.0,
                 "gain": 0.0
             },
@@ -319,7 +325,8 @@
             "odds": 27.0,
             "odds_rank": 7,
             "body": {
-                "@id": "horse_id:2011100715#201805010212",
+                "@id": "horse_id:2011100715",
+                "run_for": "race_id:201805010212",
                 "weight": 482.0,
                 "gain": -2.0
             },
@@ -362,7 +369,8 @@
             "odds": 7.0,
             "odds_rank": 3,
             "body": {
-                "@id": "horse_id:2014102902#201805010212",
+                "@id": "horse_id:2014102902",
+                "run_for": "race_id:201805010212",
                 "weight": 480.0,
                 "gain": 24.0
             },
@@ -405,7 +413,8 @@
             "odds": 49.7,
             "odds_rank": 8,
             "body": {
-                "@id": "horse_id:2013103604#201805010212",
+                "@id": "horse_id:2013103604",
+                "run_for": "race_id:201805010212",
                 "weight": 446.0,
                 "gain": 6.0
             },
@@ -414,84 +423,96 @@
     ],
     "dividend": [
         {
-            "@id": "race_id:201805010212#単勝",
+            "@id": "win:_201805010212",
+            "@type": "baken:win",
             "name": "単勝",
             "official": "7",
             "refund": "190",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:201805010212#複勝_1",
+            "@id": "place:_201805010212",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "7",
             "refund": "110",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:201805010212#複勝_2",
+            "@id": "place:_201805010212",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "3",
             "refund": "120",
             "odds_rank": "2"
         },
         {
-            "@id": "race_id:201805010212#複勝_3",
+            "@id": "place:_201805010212",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "2",
             "refund": "160",
             "odds_rank": "3"
         },
         {
-            "@id": "race_id:201805010212#枠連",
+            "@id": "bracket_quinella:_201805010212",
+            "@type": "baken:bracket_quinella",
             "name": "枠連",
             "official": "3-7",
             "refund": "300",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:201805010212#馬連",
+            "@id": "quinella:_201805010212",
+            "@type": "baken:quinella",
             "name": "馬連",
             "official": "3-7",
             "refund": "310",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:201805010212#ワイド_1",
+            "@id": "quinella_place:_201805010212",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "3-7",
             "refund": "170",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:201805010212#ワイド_2",
+            "@id": "quinella_place:_201805010212",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "2-7",
             "refund": "290",
             "odds_rank": "3"
         },
         {
-            "@id": "race_id:201805010212#ワイド_3",
+            "@id": "quinella_place:_201805010212",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "2-3",
             "refund": "340",
             "odds_rank": "4"
         },
         {
-            "@id": "race_id:201805010212#馬単",
+            "@id": "exacta:_201805010212",
+            "@type": "baken:exacta",
             "name": "馬単",
             "official": "7=>3",
             "refund": "450",
             "odds_rank": "1"
         },
         {
-            "@id": "race_id:201805010212#三連複",
+            "@id": "trio:_201805010212",
+            "@type": "baken:trio",
             "name": "三連複",
             "official": "2-3-7",
             "refund": "670",
             "odds_rank": "2"
         },
         {
-            "@id": "race_id:201805010212#三連単",
+            "@id": "tierce:_201805010212",
+            "@type": "baken:tierce",
             "name": "三連単",
             "official": "7=>3=>2",
             "refund": "1650",
@@ -503,9 +524,6 @@
         "9=5,1=(6,3)7-(2,4)-8",
         "9(5,1)=(6,3)7-(2,4)-8"
     ],
-    "racetime": {
-        "@id": "race_id:201805010212#racetime",
-        "lap": "13.0 - 11.1 - 11.5 - 11.8 - 12.1 - 12.2 - 11.7 - 11.7 - 11.8",
-        "pacemaker": "13.0 - 24.1 - 35.6 - 47.4 - 59.5 - 71.7 - 83.4 - 95.1 - 106.9 (35.6-35.2)"
-    }
+    "lap": "13.0 - 11.1 - 11.5 - 11.8 - 12.1 - 12.2 - 11.7 - 11.7 - 11.8",
+    "pacemaker": "13.0 - 24.1 - 35.6 - 47.4 - 59.5 - 71.7 - 83.4 - 95.1 - 106.9 (35.6-35.2)"
 }
