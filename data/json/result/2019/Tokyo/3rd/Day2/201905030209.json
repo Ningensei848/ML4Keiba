@@ -2,7 +2,7 @@
     "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/contexts.jsonld",
     "@id": "race_id:201905030209",
     "@type": "wd:Q3001412",
-    "title": "ホンコンJCT ",
+    "title": "ホンコンJCT",
     "grade": "non graded",
     "track_surface": "芝",
     "direction": "左",
@@ -61,7 +61,8 @@
             "odds": 39.4,
             "odds_rank": 10,
             "body": {
-                "@id": "horse_id:2014100752#201905030209",
+                "@id": "horse_id:2014100752",
+                "run_for": "race_id:201905030209",
                 "weight": 488.0,
                 "gain": -4.0
             },
@@ -104,7 +105,8 @@
             "odds": 5.2,
             "odds_rank": 3,
             "body": {
-                "@id": "horse_id:2014102190#201905030209",
+                "@id": "horse_id:2014102190",
+                "run_for": "race_id:201905030209",
                 "weight": 506.0,
                 "gain": -2.0
             },
@@ -147,7 +149,8 @@
             "odds": 9.4,
             "odds_rank": 5,
             "body": {
-                "@id": "horse_id:2015103627#201905030209",
+                "@id": "horse_id:2015103627",
+                "run_for": "race_id:201905030209",
                 "weight": 466.0,
                 "gain": -14.0
             },
@@ -190,7 +193,8 @@
             "odds": 3.3,
             "odds_rank": 1,
             "body": {
-                "@id": "horse_id:2015101568#201905030209",
+                "@id": "horse_id:2015101568",
+                "run_for": "race_id:201905030209",
                 "weight": 508.0,
                 "gain": 2.0
             },
@@ -233,7 +237,8 @@
             "odds": 32.9,
             "odds_rank": 8,
             "body": {
-                "@id": "horse_id:2014105348#201905030209",
+                "@id": "horse_id:2014105348",
+                "run_for": "race_id:201905030209",
                 "weight": 468.0,
                 "gain": 6.0
             },
@@ -276,7 +281,8 @@
             "odds": 12.6,
             "odds_rank": 7,
             "body": {
-                "@id": "horse_id:2014105760#201905030209",
+                "@id": "horse_id:2014105760",
+                "run_for": "race_id:201905030209",
                 "weight": 524.0,
                 "gain": 2.0
             },
@@ -319,7 +325,8 @@
             "odds": 5.0,
             "odds_rank": 2,
             "body": {
-                "@id": "horse_id:2015104512#201905030209",
+                "@id": "horse_id:2015104512",
+                "run_for": "race_id:201905030209",
                 "weight": 504.0,
                 "gain": 4.0
             },
@@ -362,7 +369,8 @@
             "odds": 12.0,
             "odds_rank": 6,
             "body": {
-                "@id": "horse_id:2013103589#201905030209",
+                "@id": "horse_id:2013103589",
+                "run_for": "race_id:201905030209",
                 "weight": 542.0,
                 "gain": 0.0
             },
@@ -405,7 +413,8 @@
             "odds": 38.2,
             "odds_rank": 9,
             "body": {
-                "@id": "horse_id:2015100476#201905030209",
+                "@id": "horse_id:2015100476",
+                "run_for": "race_id:201905030209",
                 "weight": 482.0,
                 "gain": -2.0
             },
@@ -448,7 +457,8 @@
             "odds": 45.0,
             "odds_rank": 11,
             "body": {
-                "@id": "horse_id:2014102087#201905030209",
+                "@id": "horse_id:2014102087",
+                "run_for": "race_id:201905030209",
                 "weight": 484.0,
                 "gain": 12.0
             },
@@ -491,7 +501,8 @@
             "odds": 5.2,
             "odds_rank": 4,
             "body": {
-                "@id": "horse_id:2014106218#201905030209",
+                "@id": "horse_id:2014106218",
+                "run_for": "race_id:201905030209",
                 "weight": 524.0,
                 "gain": -8.0
             },
@@ -500,84 +511,96 @@
     ],
     "dividend": [
         {
-            "@id": "race_id:201905030209#単勝",
+            "@id": "win:_201905030209",
+            "@type": "baken:win",
             "name": "単勝",
             "official": "3",
             "refund": "3940",
             "odds_rank": "10"
         },
         {
-            "@id": "race_id:201905030209#複勝_1",
+            "@id": "place:_201905030209",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "3",
             "refund": "760",
             "odds_rank": "9"
         },
         {
-            "@id": "race_id:201905030209#複勝_2",
+            "@id": "place:_201905030209",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "2",
             "refund": "220",
             "odds_rank": "4"
         },
         {
-            "@id": "race_id:201905030209#複勝_3",
+            "@id": "place:_201905030209",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "5",
             "refund": "310",
             "odds_rank": "6"
         },
         {
-            "@id": "race_id:201905030209#枠連",
+            "@id": "bracket_quinella:_201905030209",
+            "@type": "baken:bracket_quinella",
             "name": "枠連",
             "official": "2-3",
             "refund": "8930",
             "odds_rank": "24"
         },
         {
-            "@id": "race_id:201905030209#馬連",
+            "@id": "quinella:_201905030209",
+            "@type": "baken:quinella",
             "name": "馬連",
             "official": "2-3",
             "refund": "8630",
             "odds_rank": "25"
         },
         {
-            "@id": "race_id:201905030209#ワイド_1",
+            "@id": "quinella_place:_201905030209",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "2-3",
             "refund": "2,400",
             "odds_rank": "24"
         },
         {
-            "@id": "race_id:201905030209#ワイド_2",
+            "@id": "quinella_place:_201905030209",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "3-5",
             "refund": "3,150",
             "odds_rank": "31"
         },
         {
-            "@id": "race_id:201905030209#ワイド_3",
+            "@id": "quinella_place:_201905030209",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "2-5",
             "refund": "650",
             "odds_rank": "6"
         },
         {
-            "@id": "race_id:201905030209#馬単",
+            "@id": "exacta:_201905030209",
+            "@type": "baken:exacta",
             "name": "馬単",
             "official": "3=>2",
             "refund": "21780",
             "odds_rank": "61"
         },
         {
-            "@id": "race_id:201905030209#三連複",
+            "@id": "trio:_201905030209",
+            "@type": "baken:trio",
             "name": "三連複",
             "official": "2-3-5",
             "refund": "15270",
             "odds_rank": "51"
         },
         {
-            "@id": "race_id:201905030209#三連単",
+            "@id": "tierce:_201905030209",
+            "@type": "baken:tierce",
             "name": "三連単",
             "official": "3=>2=>5",
             "refund": "154550",
@@ -589,9 +612,6 @@
         "2(6,8)3(5,7)(1,9,10,11)4",
         "2(6,8)(3,5,7)(1,9,11)10,4"
     ],
-    "racetime": {
-        "@id": "race_id:201905030209#racetime",
-        "lap": "13.1 - 12.4 - 12.2 - 12.6 - 12.8 - 12.2 - 11.6 - 11.1 - 10.6 - 11.5",
-        "pacemaker": "13.1 - 25.5 - 37.7 - 50.3 - 63.1 - 75.3 - 86.9 - 98.0 - 108.6 - 120.1 (37.7-33.2)"
-    }
+    "lap": "13.1 - 12.4 - 12.2 - 12.6 - 12.8 - 12.2 - 11.6 - 11.1 - 10.6 - 11.5",
+    "pacemaker": "13.1 - 25.5 - 37.7 - 50.3 - 63.1 - 75.3 - 86.9 - 98.0 - 108.6 - 120.1 (37.7-33.2)"
 }
