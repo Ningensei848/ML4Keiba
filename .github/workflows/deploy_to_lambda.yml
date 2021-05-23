@@ -25,36 +25,34 @@ jobs:
           unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
           sudo ./sam-installation/install
           sam --version
-      
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
-      
-      
+
       # ttl をまとめて，dump.ttl として出力
       - name: Combine turtle files
-        run: python dump.py
+        run: |
+          pip install tqdm
+          python dump.py
 
       # oxigraph-sparql-api-serverlessでコンパイルする
       - name: Clone repository
         run: |
           git clone https://github.com/uedayou/oxigraph-sparql-api-serverless.git --recursive
           mv dump.ttl oxigraph-sparql-api-serverless/rdf/dump.ttl 
-      
+
       # pull docker image from dockerhub and compile
       - name: compile
         run: |
           docker pull ningensei848/oxigraph-sparql-api-serverless:latest
           docker container run --rm -v $PWD:/code -v $HOME/.cargo/registry:/root/.cargo/registry -v $HOME/.cargo/git:/root/.cargo/git ningensei848/oxigraph-sparql-api-serverless
         working-directory: oxigraph-sparql-api-serverless
-      
+
       - name: Finally, deploy to lambda by AWS SAM CLI
         run: |
           sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket ml4keiba --region us-west-2
           sam deploy --template-file packaged.yaml --stack-name ML4Keiba --capabilities CAPABILITY_IAM --region us-west-2
-
-      
-
