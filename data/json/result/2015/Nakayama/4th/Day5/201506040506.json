@@ -62,7 +62,8 @@
             "odds": 12.8,
             "odds_rank": 6,
             "body": {
-                "@id": "horse_id:2012104643#201506040506",
+                "@id": "horse_id:2012104643",
+                "run_for": "race_id:201506040506",
                 "weight": 442.0,
                 "gain": 12.0
             },
@@ -106,7 +107,8 @@
             "odds": 4.5,
             "odds_rank": 2,
             "body": {
-                "@id": "horse_id:2012104057#201506040506",
+                "@id": "horse_id:2012104057",
+                "run_for": "race_id:201506040506",
                 "weight": 500.0,
                 "gain": 4.0
             },
@@ -150,7 +152,8 @@
             "odds": 6.9,
             "odds_rank": 4,
             "body": {
-                "@id": "horse_id:2012101810#201506040506",
+                "@id": "horse_id:2012101810",
+                "run_for": "race_id:201506040506",
                 "weight": 496.0,
                 "gain": 2.0
             },
@@ -194,7 +197,8 @@
             "odds": 3.7,
             "odds_rank": 1,
             "body": {
-                "@id": "horse_id:2012104767#201506040506",
+                "@id": "horse_id:2012104767",
+                "run_for": "race_id:201506040506",
                 "weight": 484.0,
                 "gain": -4.0
             },
@@ -238,7 +242,8 @@
             "odds": 26.2,
             "odds_rank": 9,
             "body": {
-                "@id": "horse_id:2012105092#201506040506",
+                "@id": "horse_id:2012105092",
+                "run_for": "race_id:201506040506",
                 "weight": 462.0,
                 "gain": 4.0
             },
@@ -282,7 +287,8 @@
             "odds": 113.3,
             "odds_rank": 12,
             "body": {
-                "@id": "horse_id:2012102270#201506040506",
+                "@id": "horse_id:2012102270",
+                "run_for": "race_id:201506040506",
                 "weight": 454.0,
                 "gain": 10.0
             },
@@ -326,7 +332,8 @@
             "odds": 33.3,
             "odds_rank": 10,
             "body": {
-                "@id": "horse_id:2012104254#201506040506",
+                "@id": "horse_id:2012104254",
+                "run_for": "race_id:201506040506",
                 "weight": 454.0,
                 "gain": -10.0
             },
@@ -370,7 +377,8 @@
             "odds": 4.6,
             "odds_rank": 3,
             "body": {
-                "@id": "horse_id:2012104559#201506040506",
+                "@id": "horse_id:2012104559",
+                "run_for": "race_id:201506040506",
                 "weight": 472.0,
                 "gain": -10.0
             },
@@ -414,7 +422,8 @@
             "odds": 15.6,
             "odds_rank": 7,
             "body": {
-                "@id": "horse_id:2012103561#201506040506",
+                "@id": "horse_id:2012103561",
+                "run_for": "race_id:201506040506",
                 "weight": 458.0,
                 "gain": 6.0
             },
@@ -458,7 +467,8 @@
             "odds": 16.0,
             "odds_rank": 8,
             "body": {
-                "@id": "horse_id:2012105757#201506040506",
+                "@id": "horse_id:2012105757",
+                "run_for": "race_id:201506040506",
                 "weight": 434.0,
                 "gain": -4.0
             },
@@ -502,7 +512,8 @@
             "odds": 10.1,
             "odds_rank": 5,
             "body": {
-                "@id": "horse_id:2012102465#201506040506",
+                "@id": "horse_id:2012102465",
+                "run_for": "race_id:201506040506",
                 "weight": 442.0,
                 "gain": 4.0
             },
@@ -546,7 +557,8 @@
             "odds": 91.9,
             "odds_rank": 11,
             "body": {
-                "@id": "horse_id:2012104547#201506040506",
+                "@id": "horse_id:2012104547",
+                "run_for": "race_id:201506040506",
                 "weight": 478.0,
                 "gain": -4.0
             },
@@ -590,7 +602,8 @@
             "odds": 114.5,
             "odds_rank": 13,
             "body": {
-                "@id": "horse_id:2012104442#201506040506",
+                "@id": "horse_id:2012104442",
+                "run_for": "race_id:201506040506",
                 "weight": 418.0,
                 "gain": -6.0
             },
@@ -599,84 +612,96 @@
     ],
     "dividend": [
         {
-            "@id": "race_id:201506040506#単勝",
+            "@id": "win:_201506040506",
+            "@type": "baken:win",
             "name": "単勝",
             "official": "13",
             "refund": "1280",
             "odds_rank": "6"
         },
         {
-            "@id": "race_id:201506040506#複勝_1",
+            "@id": "place:_201506040506",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "13",
             "refund": "320",
             "odds_rank": "6"
         },
         {
-            "@id": "race_id:201506040506#複勝_2",
+            "@id": "place:_201506040506",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "11",
             "refund": "190",
             "odds_rank": "2"
         },
         {
-            "@id": "race_id:201506040506#複勝_3",
+            "@id": "place:_201506040506",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "7",
             "refund": "230",
             "odds_rank": "4"
         },
         {
-            "@id": "race_id:201506040506#枠連",
+            "@id": "bracket_quinella:_201506040506",
+            "@type": "baken:bracket_quinella",
             "name": "枠連",
             "official": "7-8",
             "refund": "1000",
             "odds_rank": "4"
         },
         {
-            "@id": "race_id:201506040506#馬連",
+            "@id": "quinella:_201506040506",
+            "@type": "baken:quinella",
             "name": "馬連",
             "official": "11-13",
             "refund": "3680",
             "odds_rank": "13"
         },
         {
-            "@id": "race_id:201506040506#ワイド_1",
+            "@id": "quinella_place:_201506040506",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "11-13",
             "refund": "1,330",
             "odds_rank": "15"
         },
         {
-            "@id": "race_id:201506040506#ワイド_2",
+            "@id": "quinella_place:_201506040506",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "7-13",
             "refund": "1,650",
             "odds_rank": "23"
         },
         {
-            "@id": "race_id:201506040506#ワイド_3",
+            "@id": "quinella_place:_201506040506",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "7-11",
             "refund": "630",
             "odds_rank": "5"
         },
         {
-            "@id": "race_id:201506040506#馬単",
+            "@id": "exacta:_201506040506",
+            "@type": "baken:exacta",
             "name": "馬単",
             "official": "13=>11",
             "refund": "9060",
             "odds_rank": "37"
         },
         {
-            "@id": "race_id:201506040506#三連複",
+            "@id": "trio:_201506040506",
+            "@type": "baken:trio",
             "name": "三連複",
             "official": "7-11-13",
             "refund": "7450",
             "odds_rank": "27"
         },
         {
-            "@id": "race_id:201506040506#三連単",
+            "@id": "tierce:_201506040506",
+            "@type": "baken:tierce",
             "name": "三連単",
             "official": "13=>11=>7",
             "refund": "58470",
@@ -689,9 +714,6 @@
         "(6,*7,8)(9,11)(10,12,1)-13(3,5)-4=2",
         "(6,*7,8)11(9,10,12,1)13,5,4,3=2"
     ],
-    "racetime": {
-        "@id": "race_id:201506040506#racetime",
-        "lap": "12.8 - 11.8 - 13.0 - 13.2 - 12.4 - 12.4 - 12.8 - 13.6 - 14.2",
-        "pacemaker": "12.8 - 24.6 - 37.6 - 50.8 - 63.2 - 75.6 - 88.4 - 102.0 - 116.2 (37.6-40.6)"
-    }
+    "lap": "12.8 - 11.8 - 13.0 - 13.2 - 12.4 - 12.4 - 12.8 - 13.6 - 14.2",
+    "pacemaker": "12.8 - 24.6 - 37.6 - 50.8 - 63.2 - 75.6 - 88.4 - 102.0 - 116.2 (37.6-40.6)"
 }
