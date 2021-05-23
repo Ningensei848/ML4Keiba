@@ -3,8 +3,8 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    paths:
+      - 'data/turtle/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -31,7 +31,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
+          aws-region: ${{ secrets.AWS_REGION }}
 
       # ttl をまとめて，dump.ttl として出力
       - name: Combine turtle files
@@ -54,5 +54,9 @@ jobs:
 
       - name: Finally, deploy to lambda by AWS SAM CLI
         run: |
-          sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket ml4keiba --region us-west-2
-          sam deploy --template-file packaged.yaml --stack-name ML4Keiba --capabilities CAPABILITY_IAM --region us-west-2
+          sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket $AWS_BUCKET_NAME --region $AWS_REGION
+          sam deploy --template-file packaged.yaml --stack-name ML4Keiba --capabilities CAPABILITY_IAM --region $AWS_REGION
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+        working-directory: oxigraph-sparql-api-serverless
