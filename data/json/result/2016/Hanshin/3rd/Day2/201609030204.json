@@ -61,7 +61,8 @@
             "odds": 6.9,
             "odds_rank": 4,
             "body": {
-                "@id": "horse_id:2011105916#201609030204",
+                "@id": "horse_id:2011105916",
+                "run_for": "race_id:201609030204",
                 "weight": 484.0,
                 "gain": 0.0
             },
@@ -105,7 +106,8 @@
             "odds": 9.9,
             "odds_rank": 5,
             "body": {
-                "@id": "horse_id:2009102216#201609030204",
+                "@id": "horse_id:2009102216",
+                "run_for": "race_id:201609030204",
                 "weight": 494.0,
                 "gain": -8.0
             },
@@ -149,7 +151,8 @@
             "odds": 70.4,
             "odds_rank": 9,
             "body": {
-                "@id": "horse_id:2013106477#201609030204",
+                "@id": "horse_id:2013106477",
+                "run_for": "race_id:201609030204",
                 "weight": 478.0,
                 "gain": 0.0
             },
@@ -193,7 +196,8 @@
             "odds": 5.9,
             "odds_rank": 2,
             "body": {
-                "@id": "horse_id:2011102548#201609030204",
+                "@id": "horse_id:2011102548",
+                "run_for": "race_id:201609030204",
                 "weight": 476.0,
                 "gain": 6.0
             },
@@ -237,7 +241,8 @@
             "odds": 19.4,
             "odds_rank": 7,
             "body": {
-                "@id": "horse_id:2012102185#201609030204",
+                "@id": "horse_id:2012102185",
+                "run_for": "race_id:201609030204",
                 "weight": 450.0,
                 "gain": -8.0
             },
@@ -281,7 +286,8 @@
             "odds": 1.9,
             "odds_rank": 1,
             "body": {
-                "@id": "horse_id:2011105077#201609030204",
+                "@id": "horse_id:2011105077",
+                "run_for": "race_id:201609030204",
                 "weight": 502.0,
                 "gain": 6.0
             },
@@ -325,7 +331,8 @@
             "odds": 6.9,
             "odds_rank": 3,
             "body": {
-                "@id": "horse_id:2009101516#201609030204",
+                "@id": "horse_id:2009101516",
+                "run_for": "race_id:201609030204",
                 "weight": 494.0,
                 "gain": 16.0
             },
@@ -369,7 +376,8 @@
             "odds": 16.8,
             "odds_rank": 6,
             "body": {
-                "@id": "horse_id:2011105681#201609030204",
+                "@id": "horse_id:2011105681",
+                "run_for": "race_id:201609030204",
                 "weight": 514.0,
                 "gain": 2.0
             },
@@ -413,7 +421,8 @@
             "odds": 102.3,
             "odds_rank": 11,
             "body": {
-                "@id": "horse_id:2012102935#201609030204",
+                "@id": "horse_id:2012102935",
+                "run_for": "race_id:201609030204",
                 "weight": 468.0,
                 "gain": -6.0
             },
@@ -457,7 +466,8 @@
             "odds": 45.8,
             "odds_rank": 8,
             "body": {
-                "@id": "horse_id:2010101496#201609030204",
+                "@id": "horse_id:2010101496",
+                "run_for": "race_id:201609030204",
                 "weight": 438.0,
                 "gain": 0.0
             },
@@ -501,7 +511,8 @@
             "odds": 95.2,
             "odds_rank": 10,
             "body": {
-                "@id": "horse_id:2012105619#201609030204",
+                "@id": "horse_id:2012105619",
+                "run_for": "race_id:201609030204",
                 "weight": 458.0,
                 "gain": 16.0
             },
@@ -510,84 +521,96 @@
     ],
     "dividend": [
         {
-            "@id": "race_id:201609030204#単勝",
+            "@id": "win:_201609030204",
+            "@type": "baken:win",
             "name": "単勝",
             "official": "10",
             "refund": "690",
             "odds_rank": "4"
         },
         {
-            "@id": "race_id:201609030204#複勝_1",
+            "@id": "place:_201609030204",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "10",
             "refund": "310",
             "odds_rank": "5"
         },
         {
-            "@id": "race_id:201609030204#複勝_2",
+            "@id": "place:_201609030204",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "6",
             "refund": "290",
             "odds_rank": "4"
         },
         {
-            "@id": "race_id:201609030204#複勝_3",
+            "@id": "place:_201609030204",
+            "@type": "baken:place",
             "name": "複勝",
             "official": "3",
             "refund": "1,370",
             "odds_rank": "9"
         },
         {
-            "@id": "race_id:201609030204#枠連",
+            "@id": "bracket_quinella:_201609030204",
+            "@type": "baken:bracket_quinella",
             "name": "枠連",
             "official": "6-8",
             "refund": "1400",
             "odds_rank": "5"
         },
         {
-            "@id": "race_id:201609030204#馬連",
+            "@id": "quinella:_201609030204",
+            "@type": "baken:quinella",
             "name": "馬連",
             "official": "6-10",
             "refund": "3900",
             "odds_rank": "14"
         },
         {
-            "@id": "race_id:201609030204#ワイド_1",
+            "@id": "quinella_place:_201609030204",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "6-10",
             "refund": "1,180",
             "odds_rank": "16"
         },
         {
-            "@id": "race_id:201609030204#ワイド_2",
+            "@id": "quinella_place:_201609030204",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "3-10",
             "refund": "4,580",
             "odds_rank": "35"
         },
         {
-            "@id": "race_id:201609030204#ワイド_3",
+            "@id": "quinella_place:_201609030204",
+            "@type": "baken:quinella_place",
             "name": "ワイド",
             "official": "3-6",
             "refund": "5,420",
             "odds_rank": "37"
         },
         {
-            "@id": "race_id:201609030204#馬単",
+            "@id": "exacta:_201609030204",
+            "@type": "baken:exacta",
             "name": "馬単",
             "official": "10=>6",
             "refund": "7300",
             "odds_rank": "23"
         },
         {
-            "@id": "race_id:201609030204#三連複",
+            "@id": "trio:_201609030204",
+            "@type": "baken:trio",
             "name": "三連複",
             "official": "3-6-10",
             "refund": "65710",
             "odds_rank": "104"
         },
         {
-            "@id": "race_id:201609030204#三連単",
+            "@id": "tierce:_201609030204",
+            "@type": "baken:tierce",
             "name": "三連単",
             "official": "10=>6=>3",
             "refund": "229240",
