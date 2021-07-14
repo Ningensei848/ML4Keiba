@@ -28,53 +28,61 @@ from tqdm import tqdm
 
 from mylib import isProcessed, trackAncestor, prettifyDataset, makeCommands, Notify2LINE
 
-cwd = Path.cwd()  # expected `/content/ML4Keiba`
-DATA_ROOT = cwd / 'data'
-DIR_LIST = DATA_ROOT / 'list'
-DIR_LIST_HORSE = DIR_LIST / 'horse'
+def main():
 
-loop_num = 0
-total = len(list(DIR_LIST_HORSE.glob('**/*.txt')))
+    cwd = Path.cwd()  # expected `/content/ML4Keiba`
+    DATA_ROOT = cwd / 'data'
+    DIR_LIST = DATA_ROOT / 'list'
+    DIR_LIST_HORSE = DIR_LIST / 'horse'
 
-for targetFile in DIR_LIST_HORSE.glob('**/*.txt'):
+    loop_num = 0
+    total = len(list(DIR_LIST_HORSE.glob('**/*.txt')))
 
-    loop_num += 1
+    for targetFile in DIR_LIST_HORSE.glob('**/*.txt'):
 
-    id_list = [x for x in targetFile.read_text().split('\n') if x != '']
+        loop_num += 1
 
-    count = 0
-    quarter = 0
+        id_list = [x for x in targetFile.read_text().split('\n') if x != '']
 
-    for horse_id in tqdm(id_list):
+        count = 0
+        quarter = 0
 
-        if isProcessed(horse_id):
-            continue
+        for horse_id in tqdm(id_list):
 
-        # horse_id から祖先をたどって行き着くまですべて処理
-        trackAncestor(horse_id, 0)
+            if isProcessed(horse_id):
+                continue
 
-        # 一定数データが溜まったら整理 -----------------------------------------
-        if count < (len(id_list) // 4):
-            count += 1
-        else:
-            quarter += 1
-            prettifyDataset()
+            # horse_id から祖先をたどって行き着くまですべて処理
+            trackAncestor(horse_id, 0)
 
-            for proc in makeCommands():
-                subprocess.run(proc, encoding='utf-8', stdout=subprocess.PIPE)
+            # 一定数データが溜まったら整理 -----------------------------------------
+            if count < (len(id_list) // 4):
+                count += 1
+            else:
+                quarter += 1
+                prettifyDataset()
 
-            percentage = 25 * quarter
-            Notify2LINE(f'【Git process】{targetFile.name} ({loop_num}/{total}) is {percentage}% completed.')
+                for proc in makeCommands():
+                    subprocess.run(proc, encoding='utf-8', stdout=subprocess.PIPE)
 
-            count = 0 # 初期化して再度ループ
-        # --------------------------------------------------------------------
+                percentage = 25 * quarter
+                Notify2LINE(f'【Git process】{targetFile.name} ({loop_num}/{total}) is {percentage}% completed.')
+
+                count = 0 # 初期化して再度ループ
+            # --------------------------------------------------------------------
+        # ----------------------------------------------------------------------
+        # file 一つ終わったら報告 -------------------------------------------
+        Notify2LINE(f'【Git process】{targetFile.name} ({loop_num}/{total}) is completed!')
+    # end main for-loop ----------------------------------------------------
     # ----------------------------------------------------------------------
-    # file 一つ終わったら報告 -------------------------------------------
-    Notify2LINE(f'【Git process】{targetFile.name} ({loop_num}/{total}) is completed!')
-# end main for-loop ----------------------------------------------------
-# ----------------------------------------------------------------------
-# 全部終わったら報告 --------------------------------------------------------------------------------------
-Notify2LINE(f'【Git process】Fully Complete task ! Please stop the server!! => https://manage.conoha.jp/')
-# -------------------------------------------------------------------------------------------------------
+    # 全部終わったら報告 --------------------------------------------------------------------------------------
+    Notify2LINE(f'【Git process】Fully Complete task ! Please stop the server!! => https://manage.conoha.jp/')
+    # -------------------------------------------------------------------------------------------------------
+
+
+try:
+    main()
+except Exception as e:
+    Notify2LINE(f'【ALERT】Process Down: \n => {e}')
 
 
