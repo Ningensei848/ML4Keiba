@@ -1,14 +1,14 @@
-# ML4Keiba: Machine Learning for `競馬` Dataset
+# ML4Keiba: Machine Learning for `競馬`
+
+On going ... sorry (; _ ;)
+
 
 ## TL; DR
 
-- Scraping from [netkeiba.com](https://www.netkeiba.com/)
-  - complete: 2019 ~
-  - on going: 1957 ~ 2018
-- Convert [`JSON-LD`](https://json-ld.org/)
+- (TODO) Convert [`JSON-LD`](https://json-ld.org/)
 - (TODO) Deploy to [triple server](https://en.wikipedia.org/wiki/Triplestore) (e.g. Amazon Neptune, Openlink Virtuoso, etc.)
 
-## Schema (JSON-LD context)
+## [WIP] Schema (JSON-LD context) 
 
 [check here!](https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/contexts.jsonld)
 
