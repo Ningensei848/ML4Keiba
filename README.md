@@ -18,15 +18,15 @@
 @prefix netkeiba: <https://db.netkeiba.com/> .
 @prefix race: <https://db.netkeiba.com/race/> .
 
-@prefix tansho: <https://db.netkeiba.com/race/win#> .
-@prefix fukusho: <https://db.netkeiba.com/race/place#> .
-@prefix wakutan: <https://db.netkeiba.com/race/bracket_exacta#> .
-@prefix wakuren: <https://db.netkeiba.com/race/bracket_quinella#> .
-@prefix wide: <https://db.netkeiba.com/race/quinella_place#> .
-@prefix umatan: <https://db.netkeiba.com/race/exacta#> .
-@prefix umaren: <https://db.netkeiba.com/race/quinella#> .
-@prefix sanrenpuku: <https://db.netkeiba.com/race/trio#> .
-@prefix sanrentan: <https://db.netkeiba.com/race/trifecta#> .
+# @prefix tansho: <https://db.netkeiba.com/race/win#> .
+# @prefix fukusho: <https://db.netkeiba.com/race/place#> .
+# @prefix wakutan: <https://db.netkeiba.com/race/bracket_exacta#> .
+# @prefix wakuren: <https://db.netkeiba.com/race/bracket_quinella#> .
+# @prefix wide: <https://db.netkeiba.com/race/quinella_place#> .
+# @prefix umatan: <https://db.netkeiba.com/race/exacta#> .
+# @prefix umaren: <https://db.netkeiba.com/race/quinella#> .
+# @prefix sanrenpuku: <https://db.netkeiba.com/race/trio#> .
+# @prefix sanrentan: <https://db.netkeiba.com/race/trifecta#> .
 
 @prefix baken: <https://db.netkeiba.com/race/baken/> .
 @prefix horse_number: <https://db.netkeiba.com/race/horse_number#> .
@@ -50,19 +50,12 @@
 - `race:requirement` : 出場要件
 - `race:rule` : 参加制限
 - `race:dividend` : 配当
-  - `tansho:RACE_ID` : (目的語)
+  - [] : 空白ノード
+    - `baken:type` : 馬券の種別
     - `baken:number` : 的中番号
     - `baken:dividend` : 配当
     - `baken:rank` : 人気
       - （以下同様）
-  - `fukusho:RACE_ID` : (目的語)
-  - `wakutan:RACE_ID` : (目的語)
-  - `wakuren:RACE_ID` : (目的語)
-  - `wide:RACE_ID` : (目的語)
-  - `umatan:RACE_ID` : (目的語)
-  - `umaren:RACE_ID` : (目的語)
-  - `sanrenpuku:RACE_ID` : (目的語)
-  - `sanrentan:RACE_ID` : (目的語)
 - `race:spacing_on_corner` : spacing_on_corner: コーナーでの配置
   - spacing_on_corner:1 spacing_on_corner:2 spacing_on_corner:3 spacing_on_corner:4
 - `race:laptime` : ラップタイム（規定距離ごとの時間）
@@ -100,7 +93,8 @@
 - `horse:lose` : ４着以降
 - `horse:race_total` : 総レース数
 - `relation:XX` :
-  - 父 母 父父 父母 母父 母母 父父父 父父母 父母父 父母母 母父父 母父母 母母父 母母母 父父父父 父父父母 父父母父 父父母母 父母父父 父母父母 父母母父 父母母母 母父父父 母父父母 母父母父 母父母母 母母父父 母母父母 母母母父 母母母母 父父父父父 父父父父母 父父父母父 父父父母母 父父母父父 父父母父母 父父母母父 父父母母母 父母父父父 父母父父母 父母父母父 父母父母母 父母母父父 父母母父母 父母母母父 父母母母母 母父父父父 母父父父母 母父父母父 母父父母母 母父母父父 母父母父母 母父母母父 母父母母母 母母父父父 母母父父母 母母父母父 母母父母母 母母母父父 母母母父母 母母母母父 母母母母母 - ただし，「父＝`f`」「母＝`m`」で表記
+  - 父 母 父父 父母 母父 母母 父父父 父父母 父母父 父母母 母父父 母父母 母母父 母母母 父父父父 父父父母 父父母父 父父母母 父母父父 父母父母 父母母父 父母母母 母父父父 母父父母 母父母父 母父母母 母母父父 母母父母 母母母父 母母母母 父父父父父 父父父父母 父父父母父 父父父母母 父父母父父 父父母父母 父父母母父 父父母母母 父母父父父 父母父父母 父母父母父 父母父母母 父母母父父 父母母父母 父母母母父 父母母母母 母父父父父 母父父父母 母父父母父 母父父母母 母父母父父 母父母父母 母父母母父 母父母母母 母母父父父 母母父父母 母母父母父 母母父母母 母母母父父 母母母父母 母母母母父 母母母母母
+  - ただし，「父＝`f`」「母＝`m`」で表記
   <!-- cf. https://www.asahi-net.or.jp/~ax2s-kmtn/internet/rdf/rdf-primer.html -->
 - `result:RACE_ID`
   - [] : 空白ノード
