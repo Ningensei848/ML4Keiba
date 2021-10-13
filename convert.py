@@ -17,8 +17,12 @@ from horseTsv2Ttl import processHorse
 
 
 PREFIX = """
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix netkeiba: <https://db.netkeiba.com/> .
 @prefix horse: <https://db.netkeiba.com/horse/> .
+@prefix trainer: <https://db.netkeiba.com/trainer/> .
+@prefix owner: <https://db.netkeiba.com/owner/> .
+@prefix breeder: <https://db.netkeiba.com/breeder/> .
 
 @prefix relation: <https://db.netkeiba.com/horse/ped#> .
 @prefix race: <https://db.netkeiba.com/race/> .

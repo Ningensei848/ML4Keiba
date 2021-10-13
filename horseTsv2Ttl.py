@@ -8,8 +8,10 @@ df として読み込む
 ttl に書き出しまでやって終了
 """
 
+
 from pathlib import Path
 import pandas as pd
+import numpy as np
 import itertools
 
 parent = ['f', 'm']
@@ -63,7 +65,7 @@ def processHorseDict(d):
 def getRelation(row):
 
     lines = [
-        ' '.join([f'\trelation:{rel}', f'horse:{row[rel]}' if type(row[rel]) is not float else '\"unknown\"', ";"]) for rel in RELATIONSHIPS
+        ' '.join([f'\trelation:{rel}', f'horse:{row[rel]}' if row[rel] is not np.nan else '\"Unknown\"', ";"]) for rel in RELATIONSHIPS
     ]
     return '\n'.join(lines)
 
@@ -78,20 +80,26 @@ def getRaceHistory(row):
 
 
 def template(horse_id, row):
+    birthday = f'\"{row["birthday"]}\"^^xsd:{"year" if len(row["birthday"]) == 4 else "date"}'
+    trainer = f'trainer:{row["trainer"]}' if row["trainer"] is not np.nan else f'\"Unknown\"'
+    owner = f'owner:{row["owner"]}' if row["owner"] is not np.nan else f'\"Unknown\"'
+    breeder = f'breeder:{row["breeder"]}' if row["breeder"] is not np.nan else f'\"Unknown\"'
+    sale_price = f'\"{row["sale_price"]}\"^^xsd:nonNegativeInteger' if row["sale_price"] != '-' else f'\"{row["sale_price"]}\"'
+
     return '\n'.join([
-        f"horse:{horse_id} horse:stallion {row['stallion']} ;",
-        f"\thorse:birthday \"{row['birthday']}\" ;",
-        f"\thorse:trainer \"{row['trainer']}\" ;",
-        f"\thorse:owner \"{row['owner']}\" ;",
-        f"\thorse:breeder \"{row['breeder']}\" ;",
-        f"\thorse:country \"{row['country']}\" ;",
-        f"\thorse:sale_price \"{row['sale_price']}\" ;",
-        f"\thorse:prize_total \"{row['prize_total']}\" ;",
-        f"\thorse:win \"{row['win']}\" ;",
-        f"\thorse:second \"{row['second']}\" ;",
-        f" \thorse:third \"{row['third']}\" ;",
-        f"\thorse:lose \"{row['lose']}\" ;",
-        f"\thorse:race_total \"{row['race_total']}\" ;",
+        f"horse:{horse_id} horse:stallion {row['stallion']} ;",  # boolean
+        f"\thorse:birthday {birthday} ;",
+        f"\thorse:trainer {trainer} ;",
+        f"\thorse:owner {owner} ;",
+        f"\thorse:breeder {breeder} ;",
+        f"\thorse:country \"{row['country']}\" ;",  # xsd:string
+        f"\thorse:sale_price {sale_price} ;",
+        f"\thorse:prize_total \"{row['prize_total']}\"^^xsd:nonNegativeInteger ;",
+        f"\thorse:win \"{row['win']}\"^^xsd:nonNegativeInteger ;",
+        f"\thorse:second \"{row['second']}\"^^xsd:nonNegativeInteger ;",
+        f" \thorse:third \"{row['third']}\"^^xsd:nonNegativeInteger ;",
+        f"\thorse:lose \"{row['lose']}\"^^xsd:nonNegativeInteger ;",
+        f"\thorse:race_total \"{row['race_total']}\"^^xsd:nonNegativeInteger ;",
         getRelation(row),
         f"{getRaceHistory(row)} .\n"
     ])

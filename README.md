@@ -73,6 +73,10 @@
 @prefix sire: <https://db.netkeiba.com/horse/sire/> .
 @prefix bms: <https://db.netkeiba.com/horse/bms/> .
 
+@prefix trainer: <https://db.netkeiba.com/trainer/> .
+@prefix owner: <https://db.netkeiba.com/owner/> .
+@prefix breeder: <https://db.netkeiba.com/breeder/> .
+
 @prefix relation: <https://db.netkeiba.com/horse/ped#> .
 @prefix result: <https://db.netkeiba.com/horse/result#> .
 @prefix result_sire: <https://db.netkeiba.com/horse//sire/result#> .
