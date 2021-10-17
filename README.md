@@ -9,6 +9,11 @@
 
 ## memo
 
+Virtuoso on docker による bulk_load cf. http://wiki.lifesciencedb.jp/mw/SPARQLthon75/virtuoso_docker
+
+=> `ttl` フォルダを作ってマウントしてしまうのが良さそう
+
+
 <details>
 <summary>prefixies information ... </summary>
 
@@ -45,7 +50,7 @@
 - `race:grade` : レースの格付
 - `race:date` : 開催日
 - `race:round` : XX 回目の開催
-- `race:course` : 開催場所
+- `race:place` : 開催場所
 - `race:days` : XX 日目
 - `race:requirement` : 出場要件
 - `race:rule` : 参加制限
@@ -112,7 +117,8 @@
     - `horse:gain` : 体重変化(前走比)
     - `horse:impost` : 斤量
     - `horse:racetime` : タイム
-    - `horse:margin` : 着差通過
+    - `horse:margin` : 着差
+    - `horse:passing_order` : 通過順位
     - `horse:spurt` : 上り
     - `horse:jockey` : 騎手
     - `horse:trainer`: 調教師
