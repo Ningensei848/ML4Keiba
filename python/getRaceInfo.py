@@ -31,6 +31,9 @@ import requests
 from tqdm import tqdm
 
 
+# TODO: 00nan などの表記ゆれはなくす　
+# cf. https://github.com/Ningensei848/ML4Keiba/blob/main/data/csv/race/1954/WORLD/result/A6_%E3%82%A4%E3%82%AE%E3%83%AA%E3%82%B9.tsv
+
 GIT_AUTHOR_NAME = "Ningensei848-BOT"
 GITHUB_EMAIL = "bot@ningensei848.github.com"
 GITHUB_PERSONAL_ACCESS_TOKEN = os.environ.get(
@@ -366,7 +369,7 @@ def getSpacingOnCorner(soup, race_id):
 
     html = f'<html><head></head><body>{soup.prettify()}</body></html>'
 
-    dfs = pd.read_html(html)
+    dfs = pd.read_html(html, dtype=str)
     if len(dfs) == 0:
         return pd.DataFrame(index=[race_id], columns=[f'spacing_on_corner:{i}' for i in range(1, 4+1)])
 
@@ -404,7 +407,7 @@ def getLapAndPace(soup, race_id):
         return pd.DataFrame(index=[race_id], columns=LAP_AND_PACE)
 
     html = f'<html><head></head><body>{soup.prettify()}</body></html>'
-    dfs = pd.read_html(html)
+    dfs = pd.read_html(html, dtype=str)
 
     if len(dfs) == 0:
         return pd.DataFrame(index=[race_id], columns=LAP_AND_PACE)

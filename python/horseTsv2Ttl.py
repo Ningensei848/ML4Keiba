@@ -13,6 +13,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 import itertools
+import concurrent.futures
 
 parent = ['f', 'm']
 grandParent = [''.join(x) for x in itertools.product(parent, repeat=2)]
@@ -41,6 +42,10 @@ def renameColumns(df):
               inplace=True)
 
     return df
+
+
+def reformatDate(wrongDate):
+    return '-'.join([x.zfill(2) for x in wrongDate.split('-')])
 
 
 def processHorseDict(d):
@@ -88,7 +93,7 @@ def template(horse_id, row):
 
     return '\n'.join([
         f"horse:{horse_id} horse:stallion {row['stallion']} ;",  # boolean
-        f"\thorse:birthday {birthday} ;",
+        f"\thorse:birthday {reformatDate(birthday)} ;",
         f"\thorse:trainer {trainer} ;",
         f"\thorse:owner {owner} ;",
         f"\thorse:breeder {breeder} ;",
@@ -112,6 +117,10 @@ def preprocessing(df):
     return df
 
 
+def col2dict(row, columns):
+    return {name: row[name] for name in columns}
+
+
 def processHorse(filepath: Path):
     # csv の日本語を一部変換
     # 全体を文字列（str 型）として読み込む；ただし欠損値は float 型として扱われる
@@ -121,17 +130,39 @@ def processHorse(filepath: Path):
 
     # df の前処理
     df = preprocessing(df)
+    columns = df.columns
 
     # 一行ごとに処理する：ついでに残った「通算成績」もパースしておく
-    horseDict = processHorseDict({
-        horse_id: {name: row[name] for name in df.columns} for horse_id, row in df.iterrows()
-    })
+    # horseDict = processHorseDict({
+    #     horse_id: {name: row[name] for name in df.columns} for horse_id, row in df.iterrows()
+    # })
 
-    # horseDict を ttl 文字列に加工する
-    ttl = '\n'.join([template(horse_id, row)
-                     for horse_id, row in horseDict.items()])
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future_to_dict = {
+            executor.submit(col2dict, row, columns): horse_id for horse_id, row in df.iterrows()
+        }
+        horseDict = processHorseDict({
+            future_to_dict[future]: future.result() for future in concurrent.futures.as_completed(future_to_dict)
+        })
 
-    # 拡張子を ttl にしてファイルに書き出す
-    outputPath = filepath.with_suffix('.ttl')
-    outputPath.unlink()
-    outputPath.write_text(ttl)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future_to_list = [
+            executor.submit(template, horse_id, row) for horse_id, row in horseDict.items()
+        ]
+        # raceDict を ttl 文字列に加工する
+        ttl = '\n'.join([
+            future.result() for future in concurrent.futures.as_completed(future_to_list)
+        ])
+
+    # # horseDict を ttl 文字列に加工する
+    # ttl = '\n'.join([template(horse_id, row)
+    #                  for horse_id, row in horseDict.items()])
+
+    # 拡張子を ttl に変える＆＆ディレクトリを `turtle` 以下に変更してからファイルに書き出す
+    outputPath = Path(
+        # csv と一致したら turtle に変える
+        *[path if path != 'csv' else 'turtle' for path in filepath.with_suffix('.ttl').parts]
+    )
+    outputPath.parent.mkdir(parents=True, exist_ok=True)
+    outputPath.unlink(missing_ok=True)
+    outputPath.write_text(ttl, encoding='utf-8')
