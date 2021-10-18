@@ -26,6 +26,19 @@ RELATIONSHIPS = list(itertools.chain.from_iterable([
     parent, grandParent, g1_grandParent, g2_grandParent, g3_grandParent
 ]))
 
+PREFIX = """
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix netkeiba: <https://db.netkeiba.com/> .
+@prefix horse: <https://db.netkeiba.com/horse/> .
+@prefix trainer: <https://db.netkeiba.com/trainer/> .
+@prefix owner: <https://db.netkeiba.com/owner/> .
+@prefix breeder: <https://db.netkeiba.com/breeder/> .
+
+@prefix relation: <https://db.netkeiba.com/horse/ped#> .
+@prefix race: <https://db.netkeiba.com/race/> .
+@prefix baken: <https://db.netkeiba.com/race/baken/> .
+"""
+
 
 def renameColumns(df):
     df.rename(columns={
@@ -165,4 +178,4 @@ def processHorse(filepath: Path):
     )
     outputPath.parent.mkdir(parents=True, exist_ok=True)
     outputPath.unlink(missing_ok=True)
-    outputPath.write_text(ttl, encoding='utf-8')
+    outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')

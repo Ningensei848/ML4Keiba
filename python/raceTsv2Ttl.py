@@ -21,6 +21,19 @@ BAKEN = {
 pattern_dividend = re.compile('|'.join(['配当'[::-1], '人気'[::-1], '的中'[::-1]]))
 pattern_id = re.compile(r'\w{5,6}')
 
+PREFIX = """
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix netkeiba: <https://db.netkeiba.com/> .
+@prefix horse: <https://db.netkeiba.com/horse/> .
+@prefix trainer: <https://db.netkeiba.com/trainer/> .
+@prefix owner: <https://db.netkeiba.com/owner/> .
+@prefix breeder: <https://db.netkeiba.com/breeder/> .
+
+@prefix relation: <https://db.netkeiba.com/horse/ped#> .
+@prefix race: <https://db.netkeiba.com/race/> .
+@prefix baken: <https://db.netkeiba.com/race/baken/> .
+"""
+
 
 def reformatDate(wrongDate):
     return '-'.join([x.zfill(2) for x in wrongDate.split('-')])
@@ -78,7 +91,7 @@ def getDividends(row: pd.Series, cols: List[str]) -> str:
 def getRunners(race_id, df) -> str:
 
     df_race = df[df['race_id'].isin([race_id])]
-    columns = df_race.columns
+    columns = df.columns
     horseDict = {
         row['horse_id']: {col: row[col] for col in columns} for _, row in df_race.iterrows()
     }
@@ -197,6 +210,23 @@ def processRace(filepath: Path):
     # まずはともあれDFを得る
     # 全体を文字列（str 型）として読み込む；ただし欠損値は float 型として扱われる
     df = pd.read_csv(filepath, sep='\t', header=0, index_col=0, dtype=str)
+
+    # 一行ごとに処理する：ついでに残った「通算成績」もパースしておく
+    columns = df.columns
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future_to_dict = {
+            executor.submit(col2dict, row, columns): str(race_id) for race_id, row in df.iterrows()
+        }
+        raceDict = {
+            future_to_dict[future]: future.result() for future in concurrent.futures.as_completed(future_to_dict)
+        }
+
+    # original
+    # raceDict = {
+    #     str(race_id): {name: row[name] for name in columns} for race_id, row in df.iterrows()
+    # }
+
     filepath_res = filepath.parent.with_name('result') / filepath.name
     df_result = pd.read_csv(filepath_res, sep='\t', header=0,  dtype=str)
     df_result.rename(columns={
@@ -216,22 +246,6 @@ def processRace(filepath: Path):
         "馬主": "owner",
         "賞金(万円)": "prize_money"
     }, inplace=True)
-
-    # 一行ごとに処理する：ついでに残った「通算成績」もパースしておく
-    columns = df.columns
-
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future_to_dict = {
-            executor.submit(col2dict, row, columns): race_id for race_id, row in df.iterrows()
-        }
-        raceDict = {
-            future_to_dict[future]: future.result() for future in concurrent.futures.as_completed(future_to_dict)
-        }
-
-    # original
-    # raceDict = {
-    #     str(race_id): {name: row[name] for name in columns} for race_id, row in df.iterrows()
-    # }
 
     columns_dividend = [
         col for col in columns if pattern_dividend.match(col[::-1])
@@ -257,4 +271,4 @@ def processRace(filepath: Path):
     )
     outputPath.parent.mkdir(parents=True, exist_ok=True)
     outputPath.unlink(missing_ok=True)
-    outputPath.write_text(ttl, encoding='utf-8')
+    outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')

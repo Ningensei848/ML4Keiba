@@ -10,27 +10,11 @@ prefix なしで ttl に変換
 完成
 """
 
-import os
 import concurrent.futures
 from pathlib import Path
 from tqdm import tqdm
 from horseTsv2Ttl import processHorse
 from raceTsv2Ttl import processRace
-
-
-PREFIX = """
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix netkeiba: <https://db.netkeiba.com/> .
-@prefix horse: <https://db.netkeiba.com/horse/> .
-@prefix trainer: <https://db.netkeiba.com/trainer/> .
-@prefix owner: <https://db.netkeiba.com/owner/> .
-@prefix breeder: <https://db.netkeiba.com/breeder/> .
-
-@prefix relation: <https://db.netkeiba.com/horse/ped#> .
-@prefix race: <https://db.netkeiba.com/race/> .
-@prefix baken: <https://db.netkeiba.com/race/baken/> .
-"""
-
 
 BASE_DIR = Path.cwd().parent  # /ML4Keiba
 
