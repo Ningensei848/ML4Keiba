@@ -15,6 +15,10 @@ Virtuoso on docker による bulk_load cf. http://wiki.lifesciencedb.jp/mw/SPARQ
 
 ### ttl フォルダから bulk load する
 
+```
+docker exec -i ml4keiba_virtuoso_1 isql 1111 -U dba -P password < ./virtuoso/initialLoad.sql &
+```
+
 [Example for Multiple RDF Source Files Upload](http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoaderExampleMultiple)
 
 [Bulk Loading RDF Source Files into one or more Graph IRIs](http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoader)

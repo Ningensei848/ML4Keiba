@@ -1,11 +1,15 @@
 version: "3.9"
 services:
   virtuoso:
-    image: openlink/virtuoso-opensource-7:latest
+    image: openlink/virtuoso-opensource-7:${VIRTUOSO_IMAGE_VERSION}
     # depends_on:
     volumes:
-      - ${PWD}/data/turtle:/mount/data:ro # read-only で turtle フォルダをマウント
-
+      # read-only で turtle フォルダをマウント
+      - ${PWD}/virtuoso/horse.ttl:/mount/data/horse.ttl:ro
+      - ${PWD}/virtuoso/race.ttl:/mount/data/race.ttl:ro
+      - ${PWD}/virtuoso/rdfloader.sql:/database/rdfloader.sql
+      # ML4Keiba/.virtuoso でマウントしてデータを永続化する
+      - ${PWD}/.virtuoso:/database
     environment:
       DBA_PASSWORD: ${PASSWORD_VIRTUOSO}
       VIRT_Parameters_DirsAllowed: ${Parameters_DirsAllowed}

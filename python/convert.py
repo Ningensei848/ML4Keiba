@@ -74,4 +74,4 @@ with HORSE_TTL.open(encoding='utf-8', mode='w') as f:
 with RACE_TTL.open(encoding='utf-8', mode='w') as f:
     f.write(PREFIX + '\n\n')
     for filepath in race_dir.glob('**/*.ttl'):
-        f.write(filepath.read_text())
+        f.write(filepath.read_text() + '\n')

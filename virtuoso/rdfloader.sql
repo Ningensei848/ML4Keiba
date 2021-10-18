@@ -1,25 +1,3 @@
-CREATE TABLE load_list (
-  ll_file      VARCHAR,
-  ll_graph     VARCHAR,
-  ll_state     INT DEFAULT 0, -- 0 not started, 1 going, 2 done
-  ll_started   DATETIME,
-  ll_done      DATETIME,
-  ll_host      INT,
-  ll_work_time INTEGER,
-  ll_error     VARCHAR,
-  PRIMARY KEY (ll_file))
-ALTER INDEX load_list ON load_list PARTITION (ll_file VARCHAR)
-;
-
-CREATE INDEX ll_state ON load_list (ll_state, ll_file, ll_graph) PARTITION (ll_state INT)
-;
-
-
-CREATE TABLE ldlock (id INT PRIMARY KEY)
-  ALTER INDEX ldlock ON ldlock PARTITION (id INT)
-;
-
-INSERT INTO ldlock VALUES (0);
 
 
 CREATE PROCEDURE
@@ -321,32 +299,6 @@ rdf_ld_srv (IN log_enable INT)
 }
 ;
 
-
-CREATE PROCEDURE 
-load_grdf (IN f VARCHAR)
-{
-  DECLARE line ANY;
-  DECLARE inx INT;
-  DECLARE ses ANY;
-  DECLARE gr VARCHAR;
-
-  IF (f LIKE '%.gz')
-    ses := gz_file_open (f);
-  ELSE
-    ses := file_open (f);
-  inx := 0;
-  line := '';
-  WHILE (line <> 0)
-    { 
-      gr := ses_read_line (ses, 0, 0, 1);
-      IF (gr = 0) RETURN;
-      line := ses_read_line (ses, 0, 0, 1);
-      IF (line = 0) RETURN;
-      DB.DBA.RDF_LOAD_RDFXML (line, gr, gr);
-      inx := inx + 1;
-    }
-}
-;
 
 -- cl_exec ('set lock_escalation_pct = 110');
 -- cl_exec ('DB.DBA.RDF_LD_SRV (1)') &
