@@ -19,17 +19,15 @@ BAKEN = {
     '配当': 'baken:dividend'
 }
 pattern_dividend = re.compile('|'.join(['配当'[::-1], '人気'[::-1], '的中'[::-1]]))
-pattern_id = re.compile(r'\w{5,6}')
+pattern_id = re.compile(r'^\w{5,6}$')
 
 PREFIX = """
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix netkeiba: <https://db.netkeiba.com/> .
 @prefix horse: <https://db.netkeiba.com/horse/> .
 @prefix trainer: <https://db.netkeiba.com/trainer/> .
 @prefix owner: <https://db.netkeiba.com/owner/> .
-@prefix breeder: <https://db.netkeiba.com/breeder/> .
+@prefix jockey: <https://db.netkeiba.com/owner/> .
 
-@prefix relation: <https://db.netkeiba.com/horse/ped#> .
 @prefix race: <https://db.netkeiba.com/race/> .
 @prefix baken: <https://db.netkeiba.com/race/baken/> .
 """

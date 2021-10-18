@@ -8,12 +8,15 @@ df として読み込む
 ttl に書き出しまでやって終了
 """
 
-
+import re
 from pathlib import Path
 import pandas as pd
 import numpy as np
 import itertools
 import concurrent.futures
+
+NaN = np.nan
+pattern_id = re.compile(r'^\w{5,6}$')
 
 parent = ['f', 'm']
 grandParent = [''.join(x) for x in itertools.product(parent, repeat=2)]
@@ -99,9 +102,13 @@ def getRaceHistory(row):
 
 def template(horse_id, row):
     birthday = f'\"{row["birthday"]}\"^^xsd:{"year" if len(row["birthday"]) == 4 else "date"}'
-    trainer = f'trainer:{row["trainer"]}' if row["trainer"] is not np.nan else f'\"Unknown\"'
-    owner = f'owner:{row["owner"]}' if row["owner"] is not np.nan else f'\"Unknown\"'
-    breeder = f'breeder:{row["breeder"]}' if row["breeder"] is not np.nan else f'\"Unknown\"'
+    trainer = '\"Unknown\"' if row['trainer'] is NaN or not pattern_id.match(str(row['trainer'])) \
+        else f'trainer:{row["trainer"].zfill(5)}'
+    owner = '\"Unknown\"' if row['owner'] is NaN or not pattern_id.match(str(row['owner'])) \
+        else f'owner:{row["owner"].zfill(6)}'
+    breeder = '\"Unknown\"' if row['breeder'] is NaN or not pattern_id.match(str(row['breeder'])) \
+        else f'breeder:{row["breeder"].zfill(6)}'
+
     sale_price = f'\"{row["sale_price"]}\"^^xsd:nonNegativeInteger' if row["sale_price"] != '-' else f'\"{row["sale_price"]}\"'
 
     return '\n'.join([
