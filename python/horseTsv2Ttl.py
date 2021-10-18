@@ -8,6 +8,7 @@ df として読み込む
 ttl に書き出しまでやって終了
 """
 
+import os
 import re
 from pathlib import Path
 import pandas as pd
@@ -157,7 +158,7 @@ def processHorse(filepath: Path):
     #     horse_id: {name: row[name] for name in df.columns} for horse_id, row in df.iterrows()
     # })
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 5) as executor:
         future_to_dict = {
             executor.submit(col2dict, row, columns): horse_id for horse_id, row in df.iterrows()
         }
@@ -165,7 +166,7 @@ def processHorse(filepath: Path):
             future_to_dict[future]: future.result() for future in concurrent.futures.as_completed(future_to_dict)
         })
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 5) as executor:
         future_to_list = [
             executor.submit(template, horse_id, row) for horse_id, row in horseDict.items()
         ]
@@ -185,4 +186,5 @@ def processHorse(filepath: Path):
     )
     outputPath.parent.mkdir(parents=True, exist_ok=True)
     outputPath.unlink(missing_ok=True)
-    outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
+    # outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
+    outputPath.write_text(ttl, encoding='utf-8')  # 個別ファイルのPREFIXは省略

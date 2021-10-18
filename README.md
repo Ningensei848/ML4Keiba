@@ -13,6 +13,22 @@ Virtuoso on docker による bulk_load cf. http://wiki.lifesciencedb.jp/mw/SPARQ
 
 => `ttl` フォルダを作ってマウントしてしまうのが良さそう
 
+### ttl フォルダから bulk load する
+
+```
+docker exec -i ml4keiba_virtuoso_1 isql 1111 -U dba -P password < ./virtuoso/initialLoad.sql &
+```
+
+[Example for Multiple RDF Source Files Upload](http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoaderExampleMultiple)
+
+[Bulk Loading RDF Source Files into one or more Graph IRIs](http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoader)
+
+caution: パフォーマンス・チューニングをしないと永劫に感じる時間がかかる場合がある
+
+> 現状だと，30 分弱もかかっている！
+> `Done. -- 1561629 msec.`
+
+cf. http://vos.openlinksw.com/owiki/wiki/VOS/VirtRDFPerformanceTuning
 
 <details>
 <summary>prefixies information ... </summary>

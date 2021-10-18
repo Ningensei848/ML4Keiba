@@ -4,6 +4,7 @@ data/csv/race : 出走馬の一覧を取ってくる
 """
 
 import re
+import os
 import concurrent.futures
 from typing import List
 from pathlib import Path
@@ -217,7 +218,7 @@ def processRace(filepath: Path):
     # 一行ごとに処理する：ついでに残った「通算成績」もパースしておく
     columns = df.columns
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 5) as executor:
         future_to_dict = {
             executor.submit(col2dict, row, columns): str(race_id) for race_id, row in df.iterrows()
         }
@@ -254,7 +255,7 @@ def processRace(filepath: Path):
         col for col in columns if pattern_dividend.match(col[::-1])
     ]
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 5) as executor:
         future_to_list = [
             executor.submit(raceTemplate, race_id, row, columns_dividend, df_result) for race_id, row in raceDict.items()
         ]
@@ -274,4 +275,5 @@ def processRace(filepath: Path):
     )
     outputPath.parent.mkdir(parents=True, exist_ok=True)
     outputPath.unlink(missing_ok=True)
-    outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
+    # outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
+    outputPath.write_text(ttl, encoding='utf-8')  # 個別ファイルのPREFIXは省略
