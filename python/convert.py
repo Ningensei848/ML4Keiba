@@ -13,9 +13,21 @@ prefix なしで ttl に変換
 import concurrent.futures
 from pathlib import Path
 from tqdm import tqdm
-from horseTsv2Ttl import processHorse
+from horseTsv2Ttl import PREFIX, processHorse
 from raceTsv2Ttl import processRace
 
+PREFIX = """
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix horse: <https://db.netkeiba.com/horse/> .
+@prefix trainer: <https://db.netkeiba.com/trainer/> .
+@prefix owner: <https://db.netkeiba.com/owner/> .
+@prefix jockey: <https://db.netkeiba.com/owner/> .
+@prefix breeder: <https://db.netkeiba.com/breeder/> .
+
+@prefix relation: <https://db.netkeiba.com/horse/ped#> .
+@prefix race: <https://db.netkeiba.com/race/> .
+@prefix baken: <https://db.netkeiba.com/race/baken/> .
+"""
 BASE_DIR = Path.cwd().parent  # /ML4Keiba
 
 # DUMP_TTL = BASE_DIR / 'dump.ttl'
@@ -45,7 +57,21 @@ with concurrent.futures.ProcessPoolExecutor() as executor:
 
 del RACE_FILES  # for GC
 
-# -----------------------------------------------------------------------------
-
-
 # TODO: 最後にValidatorを噛ませたい
+
+# output TTL ------------------------------------------------------------------
+
+horse_dir, race_dir = (p for p in TTL_DIR.iterdir())
+
+HORSE_TTL = BASE_DIR / 'virtuoso' / 'horse.ttl'
+RACE_TTL = BASE_DIR / 'virtuoso' / 'race.ttl'
+
+with HORSE_TTL.open(encoding='utf-8', mode='w') as f:
+    f.write(PREFIX + '\n\n')
+    for filepath in horse_dir.glob('**/*.ttl'):
+        f.write(filepath.read_text())
+
+with RACE_TTL.open(encoding='utf-8', mode='w') as f:
+    f.write(PREFIX + '\n\n')
+    for filepath in race_dir.glob('**/*.ttl'):
+        f.write(filepath.read_text())
