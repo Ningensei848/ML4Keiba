@@ -20,6 +20,8 @@ BAKEN = {
 }
 pattern_dividend = re.compile('|'.join(['配当'[::-1], '人気'[::-1], '的中'[::-1]]))
 pattern_id = re.compile(r'^\w{5,6}$')
+pattern_horse = re.compile(r'^\w{10}$')  # 10 桁の英数字
+
 
 PREFIX = """
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -96,7 +98,10 @@ def getRunners(race_id, df) -> str:
 
     runners = ''
 
-    for horse_id, dic in horseDict.items():
+    for horse, dic in horseDict.items():
+        horse_id = '\"Unknown\"' if horse is NaN \
+            else f'horse:{horse}' if pattern_horse.match(str(horse)) \
+            else f'\"{horse}\"'
         finishing_order = castDataForTtl(
             dic, 'finishing_order', 'xsd:unsignedByte')
         post_position = castDataForTtl(
@@ -122,7 +127,7 @@ def getRunners(race_id, df) -> str:
         prize_money = castDataForTtl(dic, 'prize_money', 'xsd:decimal')
 
         horseInfo = ' ;\n\t'.join([
-            f'\thorse:profile horse:{horse_id}',  # 馬情報
+            f'\thorse:profile {horse_id}',  # 馬情報
             f'\thorse:finishing_order {finishing_order}',  # 着順
             f'\thorse:post_position {post_position}',  # 枠番
             f'\thorse:horse_number {horse_number}',  # 馬番
