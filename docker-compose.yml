@@ -4,10 +4,8 @@ services:
     image: openlink/virtuoso-opensource-7:${VIRTUOSO_IMAGE_VERSION}
     # depends_on:
     volumes:
-      # read-only で turtle フォルダをマウント
-      - ${PWD}/virtuoso/horse.ttl:/mount/data/horse.ttl:ro
-      - ${PWD}/virtuoso/race.ttl:/mount/data/race.ttl:ro
-      - ${PWD}/virtuoso/rdfloader.sql:/database/rdfloader.sql
+      # read-only で フォルダをマウント
+      - ${PWD}/data/turtle:/mount/data/turtle:ro
       # ML4Keiba/.virtuoso でマウントしてデータを永続化する
       - ${PWD}/.virtuoso:/database
     environment:
@@ -18,9 +16,5 @@ services:
     ports:
       - 1111:1111 # isql: interactive SQL
       - 8890:8890 # http
-    networks:
-      - backend
+    # networks:
     # deploy:
-
-networks:
-  backend:
