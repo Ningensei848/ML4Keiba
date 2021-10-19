@@ -41,9 +41,9 @@ def getDict(horse_list: List[str]) -> Dict[str, List[str]]:
         # 国産馬 --------------------------
         if horse_id[:4].isdecimal():
             if horse_id[:4] in result_dict and len(result_dict[horse_id[:4]]) > 0:
-                result_dict[horse_id[:4]].append(horse_id)
+                result_dict[horse_id[:4]].append(horse_id[:10])
             else:
-                result_dict[horse_id[:4]] = [horse_id]
+                result_dict[horse_id[:4]] = [horse_id[:10]]
         # 外国産馬 ------------------------
         else:
             # horse_id が 英数字 10 桁じゃない外国産馬は無視する
