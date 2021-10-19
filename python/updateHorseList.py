@@ -23,7 +23,7 @@ RELATIONSHIPS = list(itertools.chain.from_iterable([
     parent, grandParent, g1_grandParent, g2_grandParent, g3_grandParent
 ]))
 
-BASE_DIR = Path.cwd()
+BASE_DIR = Path.cwd().parent  # /ML4Keiba
 HORSE_DIR = BASE_DIR / 'data' / 'csv' / 'horse'
 HORSE_LIST_DIR = BASE_DIR / 'data' / 'list' / 'horse'
 HORSE_FILES = sorted(list(HORSE_DIR.glob('*.tsv')))

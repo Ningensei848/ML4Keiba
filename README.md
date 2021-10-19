@@ -13,6 +13,32 @@ Virtuoso on docker による bulk_load cf. http://wiki.lifesciencedb.jp/mw/SPARQ
 
 => `ttl` フォルダを作ってマウントしてしまうのが良さそう
 
+### ttl フォルダから bulk load する
+
+```
+nohup docker exec -i ml4keiba_virtuoso_1 isql 1111 -U dba -P password < ./data/turtle/initialLoader.sql &
+```
+
+[Example for Multiple RDF Source Files Upload](http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoaderExampleMultiple)
+
+[Bulk Loading RDF Source Files into one or more Graph IRIs](http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoader)
+
+caution: パフォーマンス・チューニングをしないと永劫に感じる時間がかかる場合がある
+
+> 現状だと，30 分弱もかかっている！
+> `Done. -- 1561629 msec.`
+
+cf. http://vos.openlinksw.com/owiki/wiki/VOS/VirtRDFPerformanceTuning
+
+### GCE 上で動かす？
+
+- TTL は手元の PC で TSV から加工して，GCS(Google Cloud Storage) 上に移す
+  - tsv => ttl 変換は計算リソースもストレージも食うので，ローカルでうまく加工しておきたい
+- GCE の _Container-Optimized OS_ で docker を動かす
+  - このときに，GCE から GCS バケットをマウントしてやればよい（はず…）
+
+Bulk insert に時間がかかることはわかったので，ファイルを一つにまとめるのではなく，複数ファイルで並行してすすめるのが良さそう．
+また，そのほうがたくさんのチェックポイントを踏むことになる（頻繁にデータ更新されてコケても損害が小さくて済む）．
 
 <details>
 <summary>prefixies information ... </summary>

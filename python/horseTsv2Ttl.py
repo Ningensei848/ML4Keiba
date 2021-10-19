@@ -8,12 +8,16 @@ df として読み込む
 ttl に書き出しまでやって終了
 """
 
-
+import os
+import re
 from pathlib import Path
 import pandas as pd
 import numpy as np
 import itertools
 import concurrent.futures
+
+NaN = np.nan
+pattern_id = re.compile(r'^\w{5,6}$')
 
 parent = ['f', 'm']
 grandParent = [''.join(x) for x in itertools.product(parent, repeat=2)]
@@ -25,6 +29,19 @@ g3_grandParent = [''.join(x)
 RELATIONSHIPS = list(itertools.chain.from_iterable([
     parent, grandParent, g1_grandParent, g2_grandParent, g3_grandParent
 ]))
+
+PREFIX = """
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix netkeiba: <https://db.netkeiba.com/> .
+@prefix horse: <https://db.netkeiba.com/horse/> .
+@prefix trainer: <https://db.netkeiba.com/trainer/> .
+@prefix owner: <https://db.netkeiba.com/owner/> .
+@prefix breeder: <https://db.netkeiba.com/breeder/> .
+
+@prefix relation: <https://db.netkeiba.com/horse/ped#> .
+@prefix race: <https://db.netkeiba.com/race/> .
+@prefix baken: <https://db.netkeiba.com/race/baken/> .
+"""
 
 
 def renameColumns(df):
@@ -86,9 +103,13 @@ def getRaceHistory(row):
 
 def template(horse_id, row):
     birthday = f'\"{row["birthday"]}\"^^xsd:{"year" if len(row["birthday"]) == 4 else "date"}'
-    trainer = f'trainer:{row["trainer"]}' if row["trainer"] is not np.nan else f'\"Unknown\"'
-    owner = f'owner:{row["owner"]}' if row["owner"] is not np.nan else f'\"Unknown\"'
-    breeder = f'breeder:{row["breeder"]}' if row["breeder"] is not np.nan else f'\"Unknown\"'
+    trainer = '\"Unknown\"' if row['trainer'] is NaN or not pattern_id.match(str(row['trainer'])) \
+        else f'trainer:{row["trainer"].zfill(5)}'
+    owner = '\"Unknown\"' if row['owner'] is NaN or not pattern_id.match(str(row['owner'])) \
+        else f'owner:{row["owner"].zfill(6)}'
+    breeder = '\"Unknown\"' if row['breeder'] is NaN or not pattern_id.match(str(row['breeder'])) \
+        else f'breeder:{row["breeder"].zfill(6)}'
+
     sale_price = f'\"{row["sale_price"]}\"^^xsd:nonNegativeInteger' if row["sale_price"] != '-' else f'\"{row["sale_price"]}\"'
 
     return '\n'.join([
@@ -137,7 +158,7 @@ def processHorse(filepath: Path):
     #     horse_id: {name: row[name] for name in df.columns} for horse_id, row in df.iterrows()
     # })
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 5) as executor:
         future_to_dict = {
             executor.submit(col2dict, row, columns): horse_id for horse_id, row in df.iterrows()
         }
@@ -145,7 +166,7 @@ def processHorse(filepath: Path):
             future_to_dict[future]: future.result() for future in concurrent.futures.as_completed(future_to_dict)
         })
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 5) as executor:
         future_to_list = [
             executor.submit(template, horse_id, row) for horse_id, row in horseDict.items()
         ]
@@ -165,4 +186,5 @@ def processHorse(filepath: Path):
     )
     outputPath.parent.mkdir(parents=True, exist_ok=True)
     outputPath.unlink(missing_ok=True)
-    outputPath.write_text(ttl, encoding='utf-8')
+    # outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
+    outputPath.write_text(ttl, encoding='utf-8')  # 個別ファイルのPREFIXは省略

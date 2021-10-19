@@ -4,6 +4,7 @@ data/csv/race : 出走馬の一覧を取ってくる
 """
 
 import re
+import os
 import concurrent.futures
 from typing import List
 from pathlib import Path
@@ -19,7 +20,20 @@ BAKEN = {
     '配当': 'baken:dividend'
 }
 pattern_dividend = re.compile('|'.join(['配当'[::-1], '人気'[::-1], '的中'[::-1]]))
-pattern_id = re.compile(r'\w{5,6}')
+pattern_id = re.compile(r'^\w{5,6}$')
+pattern_horse = re.compile(r'^\w{10}$')  # 10 桁の英数字
+
+
+PREFIX = """
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix horse: <https://db.netkeiba.com/horse/> .
+@prefix trainer: <https://db.netkeiba.com/trainer/> .
+@prefix owner: <https://db.netkeiba.com/owner/> .
+@prefix jockey: <https://db.netkeiba.com/owner/> .
+
+@prefix race: <https://db.netkeiba.com/race/> .
+@prefix baken: <https://db.netkeiba.com/race/baken/> .
+"""
 
 
 def reformatDate(wrongDate):
@@ -78,14 +92,17 @@ def getDividends(row: pd.Series, cols: List[str]) -> str:
 def getRunners(race_id, df) -> str:
 
     df_race = df[df['race_id'].isin([race_id])]
-    columns = df_race.columns
+    columns = df.columns
     horseDict = {
         row['horse_id']: {col: row[col] for col in columns} for _, row in df_race.iterrows()
     }
 
     runners = ''
 
-    for horse_id, dic in horseDict.items():
+    for horse, dic in horseDict.items():
+        horse_id = '\"Unknown\"' if horse is NaN \
+            else f'horse:{horse}' if pattern_horse.match(str(horse)) \
+            else f'\"{horse}\"'
         finishing_order = castDataForTtl(
             dic, 'finishing_order', 'xsd:unsignedByte')
         post_position = castDataForTtl(
@@ -111,7 +128,7 @@ def getRunners(race_id, df) -> str:
         prize_money = castDataForTtl(dic, 'prize_money', 'xsd:decimal')
 
         horseInfo = ' ;\n\t'.join([
-            f'\thorse:profile horse:{horse_id}',  # 馬情報
+            f'\thorse:profile {horse_id}',  # 馬情報
             f'\thorse:finishing_order {finishing_order}',  # 着順
             f'\thorse:post_position {post_position}',  # 枠番
             f'\thorse:horse_number {horse_number}',  # 馬番
@@ -197,6 +214,23 @@ def processRace(filepath: Path):
     # まずはともあれDFを得る
     # 全体を文字列（str 型）として読み込む；ただし欠損値は float 型として扱われる
     df = pd.read_csv(filepath, sep='\t', header=0, index_col=0, dtype=str)
+
+    # 一行ごとに処理する：ついでに残った「通算成績」もパースしておく
+    columns = df.columns
+
+    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 5) as executor:
+        future_to_dict = {
+            executor.submit(col2dict, row, columns): str(race_id) for race_id, row in df.iterrows()
+        }
+        raceDict = {
+            future_to_dict[future]: future.result() for future in concurrent.futures.as_completed(future_to_dict)
+        }
+
+    # original
+    # raceDict = {
+    #     str(race_id): {name: row[name] for name in columns} for race_id, row in df.iterrows()
+    # }
+
     filepath_res = filepath.parent.with_name('result') / filepath.name
     df_result = pd.read_csv(filepath_res, sep='\t', header=0,  dtype=str)
     df_result.rename(columns={
@@ -217,27 +251,11 @@ def processRace(filepath: Path):
         "賞金(万円)": "prize_money"
     }, inplace=True)
 
-    # 一行ごとに処理する：ついでに残った「通算成績」もパースしておく
-    columns = df.columns
-
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future_to_dict = {
-            executor.submit(col2dict, row, columns): race_id for race_id, row in df.iterrows()
-        }
-        raceDict = {
-            future_to_dict[future]: future.result() for future in concurrent.futures.as_completed(future_to_dict)
-        }
-
-    # original
-    # raceDict = {
-    #     str(race_id): {name: row[name] for name in columns} for race_id, row in df.iterrows()
-    # }
-
     columns_dividend = [
         col for col in columns if pattern_dividend.match(col[::-1])
     ]
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 5) as executor:
         future_to_list = [
             executor.submit(raceTemplate, race_id, row, columns_dividend, df_result) for race_id, row in raceDict.items()
         ]
@@ -257,4 +275,5 @@ def processRace(filepath: Path):
     )
     outputPath.parent.mkdir(parents=True, exist_ok=True)
     outputPath.unlink(missing_ok=True)
-    outputPath.write_text(ttl, encoding='utf-8')
+    # outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
+    outputPath.write_text(ttl, encoding='utf-8')  # 個別ファイルのPREFIXは省略
