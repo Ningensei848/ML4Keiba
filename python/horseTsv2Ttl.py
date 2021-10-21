@@ -40,7 +40,6 @@ PREFIX = """
 
 @prefix relation: <https://db.netkeiba.com/horse/ped#> .
 @prefix race: <https://db.netkeiba.com/race/> .
-@prefix baken: <https://db.netkeiba.com/race/baken/> .
 """
 
 
@@ -186,5 +185,5 @@ def processHorse(filepath: Path):
     )
     outputPath.parent.mkdir(parents=True, exist_ok=True)
     outputPath.unlink(missing_ok=True)
-    # outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
-    outputPath.write_text(ttl, encoding='utf-8')  # 個別ファイルのPREFIXは省略
+    outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
+    # outputPath.write_text(ttl, encoding='utf-8')  # 個別ファイルのPREFIXは省略

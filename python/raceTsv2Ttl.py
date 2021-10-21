@@ -20,7 +20,7 @@ BAKEN = {
     '配当': 'baken:dividend'
 }
 pattern_dividend = re.compile('|'.join(['配当'[::-1], '人気'[::-1], '的中'[::-1]]))
-pattern_id = re.compile(r'^\w{5,6}$')
+pattern_id = re.compile(r'^\w{1,6}$')
 pattern_horse = re.compile(r'^\w{10}$')  # 10 桁の英数字
 
 
@@ -120,7 +120,7 @@ def getRunners(race_id, df) -> str:
         passing_order = castDataForTtl(dic, 'passing_order')
         spurt = castDataForTtl(dic, 'spurt', 'xsd:decimal')
         jockey = '\"Unknown\"' if dic['jockey'] is NaN or not pattern_id.match(dic['jockey']) \
-            else f'jockey:{dic["jockey"].zfill(6)}'
+            else f'jockey:{dic["jockey"].zfill(5)}'
         trainer = '\"Unknown\"' if dic['trainer'] is NaN or not pattern_id.match(dic['trainer']) \
             else f'trainer:{dic["trainer"].zfill(5)}'
         owner = '\"Unknown\"' if dic['owner'] is NaN or not pattern_id.match(dic['owner']) \
@@ -275,5 +275,5 @@ def processRace(filepath: Path):
     )
     outputPath.parent.mkdir(parents=True, exist_ok=True)
     outputPath.unlink(missing_ok=True)
-    # outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
-    outputPath.write_text(ttl, encoding='utf-8')  # 個別ファイルのPREFIXは省略
+    outputPath.write_text(f'{PREFIX}\n\n{ttl}', encoding='utf-8')
+    # outputPath.write_text(ttl, encoding='utf-8')  # 個別ファイルのPREFIXは省略
