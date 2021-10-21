@@ -1,3 +1,4 @@
+import sys
 import traceback
 import subprocess
 from pathlib import Path
@@ -13,6 +14,8 @@ from tqdm import tqdm
 
 from myScrapLib import isProcessed, trackAncestor, prettifyDataset, makeCommands, Notify2LINE
 
+BASE_DIR = Path.cwd().parent  # ML4Keiba
+
 
 def now():
     return datetime.now(timezone(timedelta(hours=9)))
@@ -20,8 +23,7 @@ def now():
 
 def main():
 
-    cwd = Path.cwd()  # expected `/content/ML4Keiba`
-    DATA_ROOT = cwd / 'data'
+    DATA_ROOT = BASE_DIR / 'data'
     DIR_LIST = DATA_ROOT / 'list'
     DIR_LIST_HORSE = DIR_LIST / 'horse'
 
@@ -60,9 +62,10 @@ def main():
 
                 prettifyDataset()
 
-                for proc in makeCommands():
-                    subprocess.run(proc, encoding='utf-8',
-                                   stdout=subprocess.PIPE)
+                if sys.argv[0] == '--production':
+                    for proc in makeCommands():
+                        subprocess.run(proc, encoding='utf-8',
+                                       stdout=subprocess.PIPE)
 
                 percentage = 100 * count / len(id_list)
                 Notify2LINE(
