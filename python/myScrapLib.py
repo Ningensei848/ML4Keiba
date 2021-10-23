@@ -70,7 +70,9 @@ pattern_horse_href = re.compile(r'/horse/\d+')
 CATEGORY = ['sire', 'bms']
 
 targets = []
-BASE_DIR = Path.cwd().parent  # ML4Keiba
+
+BASE_DIR = Path.cwd().parent  # expected `/ML4Keiba`
+
 DATA_ROOT = BASE_DIR / 'data'
 DIR_CSV = DATA_ROOT / 'csv'
 DIR_CSV_HORSE = DIR_CSV / 'horse'

@@ -14,6 +14,7 @@ from tqdm import tqdm
 
 from myScrapLib import isProcessed, trackAncestor, prettifyDataset, makeCommands, Notify2LINE
 
+
 BASE_DIR = Path.cwd().parent  # ML4Keiba
 
 
