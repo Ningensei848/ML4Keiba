@@ -62,7 +62,7 @@ def main():
 
                 prettifyDataset()
 
-                if sys.argv[0] == '--production':
+                if len(sys.argv) > 1 and sys.argv[1] == '--production':
                     for proc in makeCommands():
                         subprocess.run(proc, encoding='utf-8',
                                        stdout=subprocess.PIPE)
