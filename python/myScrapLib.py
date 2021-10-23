@@ -70,8 +70,8 @@ pattern_horse_href = re.compile(r'/horse/\d+')
 CATEGORY = ['sire', 'bms']
 
 targets = []
-cwd = Path.cwd()  # expected `/content/ML4Keiba`
-DATA_ROOT = cwd / 'data'
+BASE_DIR = Path.cwd().parent  # expected `/ML4Keiba`
+DATA_ROOT = BASE_DIR / 'data'
 DIR_CSV = DATA_ROOT / 'csv'
 DIR_CSV_HORSE = DIR_CSV / 'horse'
 # いったんはここに集積→溜まったら年別に振り分け
