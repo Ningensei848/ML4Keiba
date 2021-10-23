@@ -70,7 +70,9 @@ pattern_horse_href = re.compile(r'/horse/\d+')
 CATEGORY = ['sire', 'bms']
 
 targets = []
+
 BASE_DIR = Path.cwd().parent  # expected `/ML4Keiba`
+
 DATA_ROOT = BASE_DIR / 'data'
 DIR_CSV = DATA_ROOT / 'csv'
 DIR_CSV_HORSE = DIR_CSV / 'horse'
@@ -149,7 +151,7 @@ def isProcessed(horse_id):
         if FILEPATH_INTERMEDIATE_HORSE.exists():
             # FILEPATH_INTERMEDIATE_HORSE を tsv として開く
             df = pd.read_csv(FILEPATH_INTERMEDIATE_HORSE,
-                             index_col=0, delimiter='\t')
+                             index_col=0, delimiter='\t', dtype=str)
 
             if int(horse_id) in df.index:
                 return True
@@ -157,7 +159,7 @@ def isProcessed(horse_id):
         filepath = DIR_CSV_HORSE / f'{horse_id[:4]}.tsv'
         if filepath.exists():
             # DIR_CSV_HORSE/YYYY.tsv を tsv として開く
-            df = pd.read_csv(filepath, index_col=0, delimiter='\t')
+            df = pd.read_csv(filepath, index_col=0, delimiter='\t', dtype=str)
 
             if int(horse_id) in df.index:
                 return True
@@ -660,7 +662,7 @@ def childProcess(source):
 
     # -----------------------------------------------------------------
     sieve_dict = {}
-    df = pd.read_csv(source, delimiter='\t')
+    df = pd.read_csv(source, delimiter='\t', dtype=str)
     # horse_id ごとの df を取得して初年度産駒が出た年ごとに振り分け ---
     for horse_id in set(df['horse_id'].tolist()):
         # 特定の `horse_id` を持つ行だけ取り出す
@@ -682,7 +684,7 @@ def childProcess(source):
         if filepath.exists():
             # 縦方向に連結
             df_concat = pd.concat(
-                [pd.read_csv(filepath, delimiter='\t'), df], axis=0)
+                [pd.read_csv(filepath, delimiter='\t', dtype=str), df], axis=0)
             df_result = df_concat.drop_duplicates(subset=df.columns[:2])
             df_result.to_csv(filepath, sep='\t', index=False)
         else:
@@ -705,7 +707,7 @@ def prettifyDataset():
     source = DIR_CSV / 'intermediate_horse.tsv'
     sieve_dict = {}
     if source.exists():
-        df = pd.read_csv(source, delimiter='\t', dtype='object')
+        df = pd.read_csv(source, delimiter='\t', dtype=str)
         columns = df.columns
         # 生年月日ごとに振り分けて辞書を作る ----------------------------
         for _, series in df.iterrows():
@@ -729,7 +731,7 @@ def prettifyDataset():
 
             # データが有れば，それを読み込んで連結し，再度ファイルに出力
             if filepath.exists():
-                df = pd.read_csv(filepath, delimiter='\t', dtype='object')
+                df = pd.read_csv(filepath, delimiter='\t', dtype=str)
                 new_df = pd.DataFrame(rows, columns=columns)
                 # 縦方向に連結
                 df_concat = pd.concat([df, new_df], axis=0)
