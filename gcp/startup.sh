@@ -21,6 +21,7 @@ source $USERHOME/.env
 
 # TTLをロードするときに必要なスクリプトを出力 {{{
 echo $LOAD_COMMAND > $USERHOME/$LOAD_SCRIPT
+chmod u+x $USERHOME/$LOAD_SCRIPT
 # }}}
 
 
@@ -83,7 +84,7 @@ docker-compose () {
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$VAR_PWD:$VAR_PWD" \
     -w "$VAR_PWD" \
-    docker/compose:$COMPOSE_VERSION $VAR_ARGS ;
+    docker/compose:$GCE_COMPOSE_TAG $VAR_ARGS ;
 }
 
 gsutil () {
@@ -141,7 +142,7 @@ docker-compose () {
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$USERHOME:$USERHOME" \
     -w="$USERHOME" \
-    docker/compose:$COMPOSE_VERSION "$@" ;
+    docker/compose:$GCE_COMPOSE_TAG "$@" ;
 }
 
 # 証明書がなければ，CERTBOT で証明書を取得する
@@ -167,7 +168,8 @@ fi
 docker-compose up -d
 # }}}
 
-# ファイルがGCSから同期されていなければ取得する {{{
+# ファイルがGCSから同期されていなければ，起動は初回のはず（前提）
+# GCSからデータを取得する & ロードもする {{{
 if [ ! -f $USERHOME/data/turtle/initialLoader.sql ]; then
   /usr/bin/docker run --rm -i \
     -v $USERHOME:$USERHOME \
@@ -177,13 +179,9 @@ if [ ! -f $USERHOME/data/turtle/initialLoader.sql ]; then
     -w $USERHOME \
     -u "$(id $USERNAME -u):$(id $USERNAME -g)" \
     gcr.io/google.com/cloudsdktool/cloud-sdk:$GCE_SDK_TAG $GSUTIL_COMMAND &>> $USERHOME/gsutil_command.log ;
+    $USERHOME/$LOAD_SCRIPT ;
 fi
 # }}}
-
-# docker-compose でコンテナが無事立ち上がっていたら，TTLをロードする {{{
-# underconstruction
-# }}}
-
 
 # 最後に終了通知
 LINE_NOTIFY 'startup process completed.'
