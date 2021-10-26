@@ -33,12 +33,62 @@ cf. http://vos.openlinksw.com/owiki/wiki/VOS/VirtRDFPerformanceTuning
 ### GCE 上で動かす？
 
 - TTL は手元の PC で TSV から加工して，GCS(Google Cloud Storage) 上に移す
+
   - tsv => ttl 変換は計算リソースもストレージも食うので，ローカルでうまく加工しておきたい
+  - GCE からバケツにアクセスするためには 1. `gcsfuse` でマウントする 2. `gsutil` が必要だが，_Container-Optimized OS_ にはいい感じのパッケージ管理ツールが搭載されていない
+
+    - `google/cloud-sdk` っていうコンテナを関数として使いましょう（この中に `gsutil` があるので，いい感じにフォルダをマウントして扱う）
+      - `mkdir data && gsutil -m cp -r gs://babieca/turtle data`
+
+- ブートディスクは10だと足りないけど，20だと潤沢に余るようだった．折衷案は15くらいだろうか？
+  - 一度増やすと減らせないので注意（インスタンス作り直しになる）
+- cloud-init の話：https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance
+
+      <details>
+      <summary>alias on cos</summary>
+
+```.bashrc
+alias docker-compose='docker run --rm -it \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v "$PWD:$PWD" \
+    -w="$PWD" \
+    docker/compose:1.29.2 '
+
+alias gsutil='docker run --rm -it \
+    -v $(pwd):$(pwd) \
+    -v $HOME:$HOME \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -v /mnt:/mnt \
+    -w $(pwd) \
+    -u $(id -u):$(id -g) \
+    google/cloud-sdk:latest gsutil "$@" ;'
+
+
+alias gcsfuse='docker run --rm -it \
+    -v $(pwd):$(pwd) \
+    -v $HOME:$HOME \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -v /mnt:/mnt \
+    -w $(pwd) \
+    -u $(id -u):$(id -g) \
+    ningensei848/gcsfuse:latest gcsfuse'
+```
+
+</details>
+
 - GCE の _Container-Optimized OS_ で docker を動かす
   - このときに，GCE から GCS バケットをマウントしてやればよい（はず…）
+    - マウントするためには `gcsfuse` が必要だが，いまいちうまくいかない
+    - 取り敢えず，`gsutil` でコピーしてくることに
 
 Bulk insert に時間がかかることはわかったので，ファイルを一つにまとめるのではなく，複数ファイルで並行してすすめるのが良さそう．
 また，そのほうがたくさんのチェックポイントを踏むことになる（頻繁にデータ更新されてコケても損害が小さくて済む）．
+
+virtuoso が稼働している状態で以下のコマンドを実行すると `initialLoader.sql` を読み込んで実行する
+
+`nohup docker exec -i kiai_virtuoso_1 isql 1111 -U dba -P password < ./data/turtle/initialLoader.sql &`
 
 <details>
 <summary>prefixies information ... </summary>
