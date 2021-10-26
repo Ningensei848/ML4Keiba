@@ -1,0 +1,9 @@
+#cloud-config
+
+# cf. https://stackoverflow.com/questions/58210222/how-to-enable-swap-swapfile-on-google-container-optimized-os-on-gce
+bootcmd:
+  - sysctl vm.disk_based_swap=1
+  - fallocate -l 1G /var/swapfile
+  - chmod 600 /var/swapfile
+  - mkswap /var/swapfile
+  - swapon /var/swapfile
