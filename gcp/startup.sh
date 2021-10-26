@@ -118,6 +118,12 @@ if [ ! -d $USERHOME/data/turtle ]; then
 fi
 # }}}
 
+# docker-compose {{{
+if [ ! -f $USERHOME/docker-compose.yml ]; then
+  curl "$API_SERVER/COMPOSE_FILE" -H "Metadata-Flavor: Google" > $USERHOME/docker-compose.yml
+fi
+# }}}
+
 # このままだと所有権が root のままなので，$USERNAME に移譲する
 chown -R $USERNAME:$USERNAME $USERHOME
 
@@ -160,16 +166,12 @@ if [ ! -d $CERTBOT_VOLUME_PATH/live ]; then
 fi
 # }}}
 
-# docker-compose {{{
-if [ ! -f $USERHOME/docker-compose.yml ]; then
-  curl "$API_SERVER/COMPOSE_FILE" -H "Metadata-Flavor: Google" > $USERHOME/docker-compose.yml
-fi
-# docker-compose.yml を読み込んでコンテナを立ち上げる
-docker-compose up -d
-# }}}
-
+# docker-compose を起動する：
 # ファイルがGCSから同期されていなければ，起動は初回のはず（前提）
 # GCSからデータを取得する & ロードもする {{{
+
+docker-compose up -d
+
 if [ ! -f $USERHOME/data/turtle/initialLoader.sql ]; then
   /usr/bin/docker run --rm -i \
     -v $USERHOME:$USERHOME \
