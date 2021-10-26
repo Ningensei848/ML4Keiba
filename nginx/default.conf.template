@@ -1,0 +1,65 @@
+
+# proxy を向ける対象に名前をつける
+upstream virtuoso {
+    # ${container_name}
+    server virtuoso:${PORT_VIRTUOSO};
+}
+
+server {
+    # server_name ${SERVER_NAME};
+
+    listen ${PORT_NGINX};
+    listen [::]:${PORT_NGINX};
+
+    # for ACME Challenge by Let's Encrypt
+    location ^~ /.well-known {
+        # ssl-proof は WebRoot 用のフォルダ
+        root /var/www/html/ssl-proof;
+    }
+
+    location / {
+        # 全ての HTTP リクエストを virtuoso にリダイレクト
+        proxy_pass http://virtuoso$request_uri;
+        # 全ての HTTP リクエストを SSL サイトにリダイレクト
+        #return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    # server_name  ${SERVER_NAME};
+
+    listen ${PORT_NGINX_SSL} ssl http2;
+    listen [::]:${PORT_NGINX_SSL} ssl http2;
+
+    ssl_certificate      /etc/letsencrypt/live/${SERVER_NAME}/fullchain.pem;
+    ssl_certificate_key  /etc/letsencrypt/live/${SERVER_NAME}/privkey.pem;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_tickets off;
+
+    # root へのアクセスもすべて `/sparql` へ転送
+    location = / {
+        return 302 https://$host/sparql;
+    }
+
+    # 上記以外のアクセスはすべて通す
+    location / {
+        proxy_pass http://virtuoso$request_uri;
+    }
+
+    # `/sparql` へのアクセスはすべて upstream に転送
+    location ^~ /sparql {
+        # upstream に対して http 接続を受け渡す
+        proxy_pass http://virtuoso$request_uri;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server   $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # `/conductor` へのアクセスはすべて `/sparql` へ転送（管理画面にはアクセスさせない）
+    location ^~ /conductor {
+        return 302 https://$host/index.html;
+    }
+}
