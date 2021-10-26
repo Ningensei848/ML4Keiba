@@ -21,6 +21,7 @@ source $USERHOME/.env
 
 # TTLをロードするときに必要なスクリプトを出力 {{{
 echo $LOAD_COMMAND > $USERHOME/$LOAD_SCRIPT
+chmod +x $USERHOME/$LOAD_SCRIPT
 # }}}
 
 
@@ -83,7 +84,7 @@ docker-compose () {
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$VAR_PWD:$VAR_PWD" \
     -w "$VAR_PWD" \
-    docker/compose:$COMPOSE_VERSION $VAR_ARGS ;
+    docker/compose:$GCE_COMPOSE_TAG $VAR_ARGS ;
 }
 
 gsutil () {
@@ -117,6 +118,12 @@ if [ ! -d $USERHOME/data/turtle ]; then
 fi
 # }}}
 
+# docker-compose {{{
+if [ ! -f $USERHOME/docker-compose.yml ]; then
+  curl "$API_SERVER/COMPOSE_FILE" -H "Metadata-Flavor: Google" > $USERHOME/docker-compose.yml
+fi
+# }}}
+
 # このままだと所有権が root のままなので，$USERNAME に移譲する
 chown -R $USERNAME:$USERNAME $USERHOME
 
@@ -141,7 +148,7 @@ docker-compose () {
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$USERHOME:$USERHOME" \
     -w="$USERHOME" \
-    docker/compose:$COMPOSE_VERSION "$@" ;
+    docker/compose:$GCE_COMPOSE_TAG "$@" ;
 }
 
 # 証明書がなければ，CERTBOT で証明書を取得する
@@ -156,19 +163,18 @@ if [ ! -d $CERTBOT_VOLUME_PATH/live ]; then
     --no-eff-email \
     -d $SERVER_NAME \
     -d www.$SERVER_NAME ;
+  LINE_NOTIFY 'certbot complete' ;
 fi
 # }}}
 
-# docker-compose {{{
-if [ ! -f $USERHOME/docker-compose.yml ]; then
-  curl "$API_SERVER/COMPOSE_FILE" -H "Metadata-Flavor: Google" > $USERHOME/docker-compose.yml
-fi
-# docker-compose.yml を読み込んでコンテナを立ち上げる
+# docker-compose を起動する：
+# ファイルがGCSから同期されていなければ，起動は初回のはず（前提）
+# GCSからデータを取得する & ロードもする {{{
+
 docker-compose up -d
-# }}}
+LINE_NOTIFY 'compose command runnning ...'
 
-# ファイルがGCSから同期されていなければ取得する {{{
-if [ ! -f $USERHOME/data/turtle/initialLoader.sql ]; then
+if [ ! -e $USERHOME/data/turtle/initialLoader.sql ]; then
   /usr/bin/docker run --rm -i \
     -v $USERHOME:$USERHOME \
     -v /etc/passwd:/etc/passwd:ro \
@@ -176,14 +182,11 @@ if [ ! -f $USERHOME/data/turtle/initialLoader.sql ]; then
     -v /mnt:/mnt \
     -w $USERHOME \
     -u "$(id $USERNAME -u):$(id $USERNAME -g)" \
-    gcr.io/google.com/cloudsdktool/cloud-sdk:$GCE_SDK_TAG $GSUTIL_COMMAND &>> $USERHOME/gsutil_command.log ;
+    gcr.io/google.com/cloudsdktool/cloud-sdk:$GCE_SDK_TAG $GSUTIL_COMMAND &> $USERHOME/gsutil_command.log ;
+    LINE_NOTIFY 'initial loading finish' ;
+    $USERHOME/$LOAD_SCRIPT ;
 fi
 # }}}
-
-# docker-compose でコンテナが無事立ち上がっていたら，TTLをロードする {{{
-# underconstruction
-# }}}
-
 
 # 最後に終了通知
 LINE_NOTIFY 'startup process completed.'

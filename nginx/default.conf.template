@@ -16,11 +16,16 @@ server {
         root /var/www/html/ssl-proof;
     }
 
+    # `/conductor` へのアクセスはすべて `/sparql` へ転送（管理画面にはアクセスさせない）
+    location ^~ /conductor {
+        return 302 http://$host/index.html;
+    }
+
     location / {
         # 全ての HTTP リクエストを virtuoso にリダイレクト
-        #proxy_pass http://virtuoso$request_uri;
+        proxy_pass http://virtuoso$request_uri;
         # 全ての HTTP リクエストを SSL サイトにリダイレクト
-        return 301 https://$host$request_uri;
+        #return 301 https://$host$request_uri;
     }
 }
 
