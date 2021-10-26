@@ -21,7 +21,7 @@ source $USERHOME/.env
 
 # TTLをロードするときに必要なスクリプトを出力 {{{
 echo $LOAD_COMMAND > $USERHOME/$LOAD_SCRIPT
-chmod u+x $USERHOME/$LOAD_SCRIPT
+chmod +x $USERHOME/$LOAD_SCRIPT
 # }}}
 
 
@@ -163,6 +163,7 @@ if [ ! -d $CERTBOT_VOLUME_PATH/live ]; then
     --no-eff-email \
     -d $SERVER_NAME \
     -d www.$SERVER_NAME ;
+  LINE_NOTIFY 'certbot complete' ;
 fi
 # }}}
 
@@ -171,8 +172,9 @@ fi
 # GCSからデータを取得する & ロードもする {{{
 
 docker-compose up -d
+LINE_NOTIFY 'compose command runnning ...'
 
-if [ ! -f $USERHOME/data/turtle/initialLoader.sql ]; then
+if [ ! -e $USERHOME/data/turtle/initialLoader.sql ]; then
   /usr/bin/docker run --rm -i \
     -v $USERHOME:$USERHOME \
     -v /etc/passwd:/etc/passwd:ro \
@@ -180,7 +182,8 @@ if [ ! -f $USERHOME/data/turtle/initialLoader.sql ]; then
     -v /mnt:/mnt \
     -w $USERHOME \
     -u "$(id $USERNAME -u):$(id $USERNAME -g)" \
-    gcr.io/google.com/cloudsdktool/cloud-sdk:$GCE_SDK_TAG $GSUTIL_COMMAND &>> $USERHOME/gsutil_command.log ;
+    gcr.io/google.com/cloudsdktool/cloud-sdk:$GCE_SDK_TAG $GSUTIL_COMMAND &> $USERHOME/gsutil_command.log ;
+    LINE_NOTIFY 'initial loading finish' ;
     $USERHOME/$LOAD_SCRIPT ;
 fi
 # }}}
