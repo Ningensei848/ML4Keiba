@@ -37,6 +37,7 @@ services:
     environment:
       DBA_PASSWORD: ${PASSWORD_VIRTUOSO}
       VIRT_HTTPServer_ServerPort: ${PORT_VIRTUOSO}
+      VIRT_Parameters_QueryLog: /database/virtuoso.qrl
       VIRT_Parameters_DirsAllowed: ${Parameters_DirsAllowed}
       VIRT_Parameters_NumberOfBuffers: ${Parameters_NumberOfBuffers}
       VIRT_Parameters_MaxDirtyBuffers: ${Parameters_MaxDirtyBuffers}
