@@ -35,7 +35,6 @@ del HORSE_FILES  # for GC
 # race ------------------------------------------------------------------------
 RACE_DIR = BASE_DIR / 'data' / 'csv' / 'race'
 
-# RACE_RESULT_FILES = sorted(list(RACE_DIR.glob('**/result/*.tsv')))
 RACE_FILES = sorted(list(RACE_DIR.glob('**/stats/*.tsv')))
 RACE_FILES_TOTAL = len(RACE_FILES)
 
@@ -59,20 +58,30 @@ log_enable(2,1);
 """
 
 MOUNT_FOLDER = '/mount/data'
+PROTOCOL = 'http'
+FQDN = 'rdf.netkeiba-lod.com'
 
 
 def compositeSQL(dir) -> str:
     res = ''
-    for filepath in dir.glob('**/*.ttl'):
-        filename = filepath.name
+    for filepath in tqdm(sorted(list(dir.glob('**/*.ttl')))):
         parts = list(filepath.parts)
         idx = parts.index('turtle')
         relativeParent = '/'.join(parts[idx:-1])
-        sql = "ld_dir(" \
-            + f"'{MOUNT_FOLDER}/{relativeParent}/', " \
-            + f"'{filename}', " \
-            + f"'http://opendata.netkeiba.com/{relativeParent}/{filename}#');"
-        res += f'{sql}\nrdf_loader_run();\ncheckpoint;\n\n'
+        # sql = "ld_dir(" \
+        #     + f"'{MOUNT_FOLDER}/{relativeParent}/', " \
+        #     + f"'{filename}', " \
+        #     + f"'{PROTOCOL}://{FQDN}/{relativeParent}/{filename}#');"
+
+        # bulk load ではなく，ファイル一つずつ読み込むパターン：DB.DBA.TTLP_MT && checkpoint;
+        sql = f"DB.DBA.TTLP_MT (file_to_string_output('{MOUNT_FOLDER}/{relativeParent}/{filepath.name}'), " \
+            + "'', " \
+            + f"'{PROTOCOL}://{FQDN}/{relativeParent}/{filepath.stem}#', " \
+            + "81 ) ;"
+
+        # DB.DBA.TTLP_MT (file_to_string_output('/home/my_name/rdf/test.ttl'), '', 'http://example.com/graph/graph_name',81);
+        #  (file_to_string_output('/home/my_name/rdf/test.ttl'), '', 'http://example.com/graph/graph_name',81);
+        res += f'{sql}\ncheckpoint;\n\n'
     return res
 
 
