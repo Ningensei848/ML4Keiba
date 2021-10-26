@@ -1,21 +1,26 @@
 #! /bin/bash
 
 # caution!! startup-scriptで実行するときの実行ユーザは root
-# 相対パスとか効かない
+# - 相対パスとか効かない
+# - 書き込み権限のないディレクトリにいる
+# - ファイルに出力したいときは，$USERNAME を使って絶対パスで指定する
 
-USERNAME=kiai
+# `API_SERVER/${name}` の記述で，instance に付与した metadata にアクセスできる
+API_SERVER="http://metadata.google.internal/computeMetadata/v1/instance/attributes"
+
+# metadata: USERNAME
+USERNAME=$(curl "$API_SERVER/USERNAME" -H "Metadata-Flavor: Google")
 USERHOME=/home/$USERNAME
+cd $USERHOME
 
-GCLOUDSDK_TAG="361.0.0-alpine"
-COMPOSE_VERSION="1.29.2"
+# metadata: DOTFILE -----------------------------------------------------------
+curl "$API_SERVER/DOTFILE" -H "Metadata-Flavor: Google" > $USERHOME/.env
+source $USERHOME/.env
+# -----------------------------------------------------------------------------
+# これ以降は `.env` 内部に記述した環境変数が使える
 
-# `gsutil` でファイルを読み込みたいときは以下のコマンド
-# GSUTIL_COMMAND='gsutil -m rsync -r gs://babieca/turtle $USERHOME/data/turtle'
-GSUTIL_COMMAND='gsutil --help'
 
-# メタデータに格納したトークンを読み出す
-TOKEN_LINE=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TOKEN_LINE -H "Metadata-Flavor: Google")
-
+# .env に格納したトークンを読み出す
 LINE_NOTIFY () {
   MSG="[GCE] $1"
   curl -X POST \
@@ -24,8 +29,7 @@ LINE_NOTIFY () {
     https://notify-api.line.me/api/notify
 }
 
-cd $USERHOME
-
+# クォートありEOFなので，変数は展開されない
 cat <<-'EOF' > $USERHOME/.bashrc
 # If not running interactively, don't do anything
 case $- in
@@ -58,68 +62,124 @@ if [ -f ~/.bash_aliases ]; then
 fi
 EOF
 
-
 # alias やらファイルコピーやら --------------------------
 VAR_PWD='$(pwd)'
 VAR_HOME='$HOME'
 UID_AND_GID='$(id -u):$(id -g)'
+VAR_ARGS='"$@"'
+
 # クォートなしEOFなので，変数は展開されることに注意
 cat <<-EOF > $USERHOME/.bash_aliases
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-alias docker-compose='docker run --rm -it \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v "$VAR_PWD:$VAR_PWD" \
-  -w "$VAR_PWD" \
-  docker/compose:$COMPOSE_VERSION'
+docker-compose () {
+  docker run --rm -it \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v "$VAR_PWD:$VAR_PWD" \
+    -w "$VAR_PWD" \
+    docker/compose:$COMPOSE_VERSION $VAR_ARGS ;
+}
 
-alias gsutil='docker run --rm -it \
-  -v "$VAR_PWD:$VAR_PWD" \
-  -v "$VAR_HOME:$VAR_HOME" \
-  -v /etc/passwd:/etc/passwd:ro \
-  -v /etc/group:/etc/group:ro \
-  -v /mnt:/mnt \
-  -w $VAR_PWD \
-  -u $UID_AND_GID \
-  gcr.io/google.com/cloudsdktool/cloud-sdk:latest gsutil'
+gsutil () {
+  docker run --rm -it \
+    -v "$VAR_PWD:$VAR_PWD" \
+    -v "$VAR_HOME:$VAR_HOME" \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -v /mnt:/mnt \
+    -w $VAR_PWD \
+    -u $UID_AND_GID \
+    gcr.io/google.com/cloudsdktool/cloud-sdk:$GCE_SDK_TAG gsutil $VAR_ARGS ;
+}
+
+# もし .env があれば，それも読み込む
+if [ -f ~/.env ]; then
+. ~/.env
+fi
 EOF
 
-# nginx_conf, dotenv, docker_compose の準備 ------------------------
-mkdir $USERHOME/nginx
-curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/nginx_conf -H "Metadata-Flavor: Google" > $USERHOME/nginx/default.conf.template
-curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/dotenv -H "Metadata-Flavor: Google" > $USERHOME/.env
-curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/docker_compose -H "Metadata-Flavor: Google" > $USERHOME/docker-compose.yml
+# NGINX {{{
+if [ ! -d $USERHOME/nginx ]; then
+  mkdir -p $USERHOME/nginx/letsencrypt
+  curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/nginx_conf -H "Metadata-Flavor: Google" > $USERHOME/nginx/default.conf.template
+fi
+# }}}
 
-# gsutil -m rsync -r src_url dst_url {{{
+# turtle {{{
 if [ ! -d $USERHOME/data/turtle ]; then
   mkdir -p $USERHOME/data/turtle
-  chown -R $USERNAME:$USERNAME $USERHOME
 fi
+# }}}
+
+# このままだと所有権が root のままなので，$USERNAME に移譲する
+chown -R $USERNAME:$USERNAME $USERHOME
+
 
 # 問題：なぜか run 時に一緒に pull すると, unexpected EOF になってコケる
-# 対策：一つ前に独立して pull しておく
-/usr/bin/docker pull gcr.io/google.com/cloudsdktool/cloud-sdk:$GCLOUDSDK_TAG &> $USERHOME/gsutil_command.log
-
-/usr/bin/docker run --rm -i \
-  -v $USERHOME:$USERHOME \
-  -v /etc/passwd:/etc/passwd:ro \
-  -v /etc/group:/etc/group:ro \
-  -v /mnt:/mnt \
-  -w $USERHOME \
-  -u "$(id $USERNAME -u):$(id $USERNAME -g)" \
-  gcr.io/google.com/cloudsdktool/cloud-sdk:$GCLOUDSDK_TAG $GSUTIL_COMMAND &>> $USERHOME/gsutil_command.log ;
+# 対策：一つ前に独立して pull しておく {{{
+# cloud-sdk
+/usr/bin/docker pull gcr.io/google.com/cloudsdktool/cloud-sdk:$GCE_SDK_TAG &>> $GCE_STARTUP_LOG
+# docker-compose
+/usr/bin/docker pull docker/compose:$GCE_COMPOSE_TAG &>> $GCE_STARTUP_LOG
+# nginx
+/usr/bin/docker pull nginx:$NGINX_IMAGE_TAG &>> $GCE_STARTUP_LOG
+# openlink/virtuoso-opensource-7
+/usr/bin/docker pull openlink/virtuoso-opensource-7:$VIRTUOSO_IMAGE_TAG &>> $GCE_STARTUP_LOG
+# certbot/certbot
+/usr/bin/docker pull certbot/certbot:$CERTBOT_IMAGE_TAG &>> $GCE_STARTUP_LOG
 # }}}
 
+# 関数定義
+docker-compose () {
+  /usr/bin/docker run --rm -i \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v "$USERHOME:$USERHOME" \
+    -w="$USERHOME" \
+    docker/compose:$COMPOSE_VERSION "$@" ;
+}
+
+# 証明書がなければ，CERTBOT で証明書を取得する
+# nginx なしで 80 ポートを開けて certbot 自身が通信する {{{
+if [ ! -d $CERTBOT_VOLUME_PATH/live ]; then
+  docker-compose run --rm --publish 80:80 certbot certonly \
+    --standalone \
+    --non-interactive \
+    --agree-tos \
+    --keep \
+    --email $USER_EMAIL \
+    --no-eff-email \
+    -d $SERVER_NAME \
+    -d www.$SERVER_NAME ;
+fi
+# }}}
 
 # docker-compose {{{
-/usr/bin/docker  run --rm -i \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v "$USERHOME:$USERHOME" \
-  -w="$USERHOME" \
-  docker/compose:$COMPOSE_VERSION up -d ;
+if [ ! -f $USERHOME/docker-compose.yml ]; then
+  curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/docker_compose -H "Metadata-Flavor: Google" > $USERHOME/docker-compose.yml
+fi
+# docker-compose.yml を読み込んでコンテナを立ち上げる
+docker-compose up -d
 # }}}
+
+# ファイルがGCSから同期されていなければ取得する {{{
+if [ ! -f $USERHOME/data/turtle/initialLoader.sql ]; then
+  /usr/bin/docker run --rm -i \
+    -v $USERHOME:$USERHOME \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -v /mnt:/mnt \
+    -w $USERHOME \
+    -u "$(id $USERNAME -u):$(id $USERNAME -g)" \
+    gcr.io/google.com/cloudsdktool/cloud-sdk:$GCE_SDK_TAG $GSUTIL_COMMAND &>> $USERHOME/gsutil_command.log ;
+fi
+# }}}
+
+# docker-compose でコンテナが無事立ち上がっていたら，TTLをロードする {{{
+# underconstruction
+# }}}
+
 
 # 最後に終了通知
 LINE_NOTIFY 'startup process completed.'
