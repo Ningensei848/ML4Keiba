@@ -28,6 +28,7 @@ services:
 
   virtuoso:
     image: openlink/virtuoso-opensource-7:${VIRTUOSO_IMAGE_TAG}
+    container_name: backend
     volumes:
       # read-only で フォルダをマウント
       - ${PWD}/data/turtle:/mount/data/turtle:ro

@@ -13,11 +13,15 @@ USERNAME=$(curl "$API_SERVER/USERNAME" -H "Metadata-Flavor: Google")
 USERHOME=/home/$USERNAME
 cd $USERHOME
 
-# metadata: DOTFILE -----------------------------------------------------------
-curl "$API_SERVER/DOTFILE" -H "Metadata-Flavor: Google" > $USERHOME/.env
+# metadata: DOTENV -----------------------------------------------------------
+curl "$API_SERVER/DOTENV" -H "Metadata-Flavor: Google" > $USERHOME/.env
 source $USERHOME/.env
 # -----------------------------------------------------------------------------
 # これ以降は `.env` 内部に記述した環境変数が使える
+
+# TTLをロードするときに必要なスクリプトを出力 {{{
+echo $LOAD_COMMAND > $USERHOME/$LOAD_SCRIPT
+# }}}
 
 
 # .env に格納したトークンを読み出す
@@ -103,7 +107,7 @@ EOF
 # NGINX {{{
 if [ ! -d $USERHOME/nginx ]; then
   mkdir -p $USERHOME/nginx/letsencrypt
-  curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/nginx_conf -H "Metadata-Flavor: Google" > $USERHOME/nginx/default.conf.template
+  curl "$API_SERVER/NGINX_CONFIG" -H "Metadata-Flavor: Google" > $USERHOME/nginx/default.conf.template
 fi
 # }}}
 
@@ -157,7 +161,7 @@ fi
 
 # docker-compose {{{
 if [ ! -f $USERHOME/docker-compose.yml ]; then
-  curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/docker_compose -H "Metadata-Flavor: Google" > $USERHOME/docker-compose.yml
+  curl "$API_SERVER/COMPOSE_FILE" -H "Metadata-Flavor: Google" > $USERHOME/docker-compose.yml
 fi
 # docker-compose.yml を読み込んでコンテナを立ち上げる
 docker-compose up -d
