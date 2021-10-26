@@ -562,7 +562,7 @@ def updateBloodMareSireDataset(bms):
 def updateMyDataset(profile):
 
     # horse_id を list に追加 -------------------------------------------
-    updateHorseList(profile['horse_id'])
+    #updateHorseList(profile['horse_id'])
 
     # horse sire and bms ------------------------------------------------
     sire = profile.pop('sire', None)
