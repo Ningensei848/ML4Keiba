@@ -33,8 +33,8 @@ def main():
 
     fileList = [x for x in DIR_LIST_HORSE.glob(
         '**/*.txt') if x.stem.isdecimal()]
-    # fileList.sort(reverse=True)
-    fileList.sort(reverse=False)
+    fileList.sort(reverse=True)
+    #fileList.sort(reverse=False)
     fileList.extend([x for x in DIR_LIST_HORSE.glob(
         '**/*.txt') if not x.stem.isdecimal()])
 
@@ -63,10 +63,8 @@ def main():
 
                 prettifyDataset()
 
-                if len(sys.argv) > 1 and sys.argv[1] == '--production':
-                    for proc in makeCommands():
-                        subprocess.run(proc, encoding='utf-8',
-                                       stdout=subprocess.PIPE)
+                for proc in makeCommands():
+                    subprocess.run(proc, encoding='utf-8', stdout=subprocess.PIPE)
 
                 percentage = 100 * count / len(id_list)
                 Notify2LINE(
