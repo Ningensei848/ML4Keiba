@@ -611,7 +611,7 @@ def updateMyDataset(profile):
 def trackAncestor(horse_id, generation, retry_count=1):
 
     # 世代が4以上前，あるいはすでに処理済みである場合はスキップ
-    if generation > 4 or isProcessed(horse_id):
+    if generation > 3 or isProcessed(horse_id):
         return
 
     try:
