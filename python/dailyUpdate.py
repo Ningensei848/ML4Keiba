@@ -4,6 +4,7 @@
 
 import re
 import os
+import time
 import datetime
 import requests
 import subprocess
@@ -11,8 +12,9 @@ from pathlib import Path
 
 
 # import pandas as pd
+from tqdm import tqdm
 from random import randint
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 from typing import List
 
 # .env ファイルをロードして環境変数へ反映
@@ -26,12 +28,22 @@ API_KEY = os.environ.get('API_KEY')
 pattern_race_id_in_list = re.compile(r'.*race_id=(\w+)&?')
 
 
-def main() -> List[str]:
+def main(date: int = None) -> List[str]:
     today = datetime.date.today()
     year, month, day = today.year * 10 ** 4, today.month * 10 ** 2, today.day
-    race_today = getKaisaiList(year + month + day)
 
-    updateRaceList(race_today)
+    target = year + month + day if date is None else date
+    race_today = getKaisaiList(target)
+
+    year = None \
+        if date is None \
+        else datetime.datetime.strptime(str(date), '%Y%m%d').strftime('%Y')
+
+    month = None \
+        if date is None \
+        else datetime.datetime.strptime(str(date), '%Y%m%d').strftime('%B')
+
+    updateRaceList(race_today, year, month)
     return race_today
 
 
@@ -66,15 +78,30 @@ def getKaisaiRaceId(text: str) -> str:
     return m.group(1) if m else ''
 
 
-def getKaisaiSource(kaisai_date: int, subdomain: str) -> str:
-    url = f'https://{subdomain}.netkeiba.com/top/race_list_sub.html?kaisai_date={kaisai_date}'
+def getKaisaiSource(kaisai_date: int) -> str:
+    url = f'https://race.netkeiba.com/top/race_list_sub.html?kaisai_date={kaisai_date}'
     return fetch(url).text
+
+
+def getKaisaiSourceNAR(kaisai_date: int) -> str:
+    url = f'https://nar.netkeiba.com/top/race_list_sub.html?kaisai_date={kaisai_date}'
+    soup = BeautifulSoup(fetch(url).text, 'lxml')
+    params = [aTag['href'] for aTag in soup.find(
+        "ul", class_="RaceList_ProvinceSelect").find_all("a")]
+    sources = []
+    for param in tqdm(params, desc='NAR races ...'):
+        sources.append(
+            fetch(f'https://nar.netkeiba.com/top/race_list_sub.html{param}').text)
+        time.sleep(2)
+
+    return '\n'.join(sources)
 
 
 def getKaisaiList(kaisai_date: int) -> List[str]:
 
-    source = '\n'.join([getKaisaiSource(kaisai_date, subdoma)
-                       for subdoma in ['race', 'nar']])
+    jra = getKaisaiSource(kaisai_date)
+    nar = getKaisaiSourceNAR(kaisai_date)
+    source = '\n'.join([jra, nar])
 
     ids = filter(lambda a: len(a), [getKaisaiRaceId(line)
                  for line in source.split('\n')])
@@ -83,10 +110,10 @@ def getKaisaiList(kaisai_date: int) -> List[str]:
     return res
 
 
-def updateRaceList(arr: List[str] = None) -> None:
+def updateRaceList(arr: List[str] = None, yyyy: str = None, mm: str = None) -> None:
     today = datetime.date.today()
-    year = today.year
-    month = today.strftime('%B')
+    year = today.strftime('%Y') if yyyy is None else yyyy
+    month = today.strftime('%B') if mm is None else mm
 
     filepath = Path.cwd() / 'data' / 'race' / str(year) / f'{month}.txt'
     # file が存在しなければ作る，存在していれば何もせずタイムスタンプだけ更新される
