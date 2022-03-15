@@ -1,0 +1,62 @@
+name: update race list daily
+
+on:
+    schedule:
+        # <!-- UTC --> 分　時　日　月　曜日（星期）/ min hour day month weekday
+        - cron: '33 4 * * *' # 4 - 9 = 19 時に一回実行される（Actionの基準時は UTC(GMT) であるため）
+    workflow_dispatch:
+
+jobs:
+    scrap:
+        runs-on: ubuntu-latest
+        name: 'Race List Update Daily'
+        timeout-minutes: 10
+        strategy:
+            fail-fast: false
+            matrix:
+                python-version: ['3.8']
+        steps:
+            - name: Load cached venv
+              uses: actions/cache@v2
+              id: poetry_cache_id
+              with:
+                  path: .venv
+                  key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              with:
+                  python-version: ${{ matrix.python-version }}
+
+            - name: Install poetry
+              run: |
+                  curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+                  echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+            - name: Poetry Version
+              run: |
+                  poetry --version
+
+            - name: Poetry Install Dependencies
+              if: steps.poetry_cache_id.outputs.cache-hit != 'true'
+              run: |
+                  poetry install --no-interaction
+
+            - name: Exec main process
+              run: |
+                  poetry run python python/dailyUpdate.py
+              env:
+                  ENDPOINT: ${{ secrets.GCP_ENDPOINT }}
+                  API_KEY: ${{ secrets.GCP_API_KEY }}
+
+            - name: Git commit by BOT
+              run: |
+                  git pull --rebase
+                  git config user.name 'github-actions[bot]'
+                  git config user.email 'github-actions[bot]@users.noreply.github.com'
+                  git add .
+                  git commit -m "[GitHub Actions BOT] Update race list || $(date)"
+                  git push

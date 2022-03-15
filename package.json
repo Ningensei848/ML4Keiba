@@ -1,0 +1,57 @@
+{
+  "name": "ml4keiba",
+  "private": true,
+  "main": "build/index.js",
+  "license": "MIT",
+  "engines": {
+    "node": "16.x"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "functions-framework --source=build/index.js --target=proxyFetch",
+    "watch": "concurrently \"npm run compile -w\" \"nodemon --watch ./build/ --exec npm run start\"",
+    "lint": "gts lint",
+    "fix": "gts fix",
+    "clean": "gts clean",
+    "check": "tsc",
+    "compile": "npm run fix && swc src -d build --config-file src/.swcrc",
+    "function:deploy": "npm run compile && node build/deploy.js",
+    "config:create": "npm run compile && node build/openapi.js",
+    "config:deploy": "gcloud api-gateway api-configs create ${npm_config_name}-config --api=${npm_config_name} --project=${npm_config_project} --openapi-spec=openapi.yaml",
+    "config:describe": "gcloud api-gateway api-configs describe ${npm_config_name}-config --api=${npm_config_name} --project=${npm_config_project}",
+    "gateway:create": "gcloud api-gateway gateways create ${npm_config_name}-gateway --api=${npm_config_name} --api-config=${npm_config_name}-config --location=asia-northeast1 --project=${npm_config_project}",
+    "gateway:describe": "gcloud api-gateway gateways describe ${npm_config_name}-gateway --location=asia-northeast1 --project=${npm_config_project}",
+    "gateway:describe:api": "gcloud api-gateway apis describe ${npm_config_name} --project=${npm_config_project}",
+    "exec:all": "npm run function:deploy && npm run config:create && npm run config:deploy && npm run gateway:create"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.0.0",
+    "node-fetch": "^3.2.2"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.55",
+    "@swc/core": "^1.2.152",
+    "@types/express": "^4.17.13",
+    "@types/js-yaml": "^4.0.5",
+    "@types/node": "^14.11.2",
+    "chokidar": "^3.5.3",
+    "concurrently": "^7.0.0",
+    "gts": "^3.1.0",
+    "js-yaml": "^4.1.0",
+    "nodemon": "^2.0.15",
+    "typescript": "^4.0.3"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "trailingComma": "none",
+    "embeddedLanguageFormatting": "off"
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "build"
+  ]
+}

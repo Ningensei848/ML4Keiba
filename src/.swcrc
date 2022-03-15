@@ -1,0 +1,24 @@
+{
+    "minify": true,
+    "module": {
+        "type": "es6",
+        "strict": true,
+        "noInterop": true,
+        "ignoreDynamic": true
+    },
+    "exclude": [
+        ".*.js$",
+        ".*.map$"
+    ],
+    "jsc": {
+        "externalHelpers": true,
+        "parser": {
+            "syntax": "typescript",
+            "tsx": false,
+            "decorators": false,
+            "dynamicImport": false
+        },
+        "target": "es2022",
+        "baseUrl": "."
+    }
+}
