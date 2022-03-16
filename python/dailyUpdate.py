@@ -34,9 +34,7 @@ def main(date: int = None) -> List[str]:
 
     target = year + month + day if date is None else date
     race_today = getKaisaiList(target)
-
     year = None if date is None else datetime.datetime.strptime(str(date), "%Y%m%d").strftime("%Y")
-
     month = None if date is None else datetime.datetime.strptime(str(date), "%Y%m%d").strftime("%B")
 
     updateRaceList(race_today, year, month)
@@ -80,7 +78,13 @@ def getKaisaiSource(kaisai_date: int) -> str:
 def getKaisaiSourceNAR(kaisai_date: int) -> str:
     url = f"https://nar.netkeiba.com/top/race_list_sub.html?kaisai_date={kaisai_date}"
     soup = BeautifulSoup(fetch(url).text, "lxml")
-    params = [aTag["href"] for aTag in soup.find("ul", class_="RaceList_ProvinceSelect").find_all("a")]
+    time.sleep(2 + uniform(1, 10) / 10)
+    ul = soup.find("ul", class_="RaceList_ProvinceSelect")
+
+    if ul is None:
+        return ""
+
+    params = [aTag["href"] for aTag in ul.find_all("a")]
     sources = []
     for param in tqdm(params, desc="NAR races ..."):
         sources.append(fetch(f"https://nar.netkeiba.com/top/race_list_sub.html{param}").text)
@@ -92,6 +96,7 @@ def getKaisaiSourceNAR(kaisai_date: int) -> str:
 def getKaisaiList(kaisai_date: int) -> List[str]:
 
     jra = getKaisaiSource(kaisai_date)
+    time.sleep(2 + uniform(1, 10) / 10)
     nar = getKaisaiSourceNAR(kaisai_date)
     source = "\n".join([jra, nar])
 
