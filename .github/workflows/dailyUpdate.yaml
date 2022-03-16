@@ -21,7 +21,7 @@ jobs:
               id: poetry_cache_id
               with:
                   path: .venv
-                  key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+                  key: venv-${{ runner.os }}-${{ secrets.CACHE_ID }}-${{ hashFiles('**/poetry.lock') }}
 
             - name: Checkout repository
               uses: actions/checkout@v2
