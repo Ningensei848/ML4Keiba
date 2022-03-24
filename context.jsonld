@@ -1,0 +1,332 @@
+{
+    "@context": {
+        "@version": 1.1,
+        "rdfs": {
+            "@id": "http://www.w3.org/2000/01/rdf-schema#",
+            "@type": "@id"
+        },
+        "name": {
+            "@id": "rdfs:label",
+            "@type": "@id",
+            "@language": null
+        },
+        "name_ja": {
+            "@id": "rdfs:label",
+            "@type": "@id",
+            "@language": "ja"
+        },
+        "name_en": {
+            "@id": "rdfs:label",
+            "@type": "@id",
+            "@language": "en"
+        },
+        "netkeiba": {
+            "@id": "https://db.netkeiba.com/",
+            "@type": "@id"
+        },
+        "race": {
+            "@id": "https://db.netkeiba.com/race/",
+            "@type": "@id"
+        },
+        "horse": {
+            "@id": "https://db.netkeiba.com/horse/",
+            "@type": "@id"
+        },
+        "trainer": {
+            "@id": "https://db.netkeiba.com/trainer/",
+            "@type": "@id"
+        },
+        "owner": {
+            "@id": "https://db.netkeiba.com/owner/",
+            "@type": "@id"
+        },
+        "breeder": {
+            "@id": "https://db.netkeiba.com/breeder/",
+            "@type": "@id"
+        },
+        "ml4keiba": {
+            "@id": "https://ningensei848.github.io/ML4Keiba/context/",
+            "@type": "@id"
+        },
+        "ml4keiba:Horse": {
+            "@type": "@id"
+        },
+        "ml4keiba:Trainer": {
+            "@type": "@id"
+        },
+        "ml4keiba:Owner": {
+            "@type": "@id"
+        },
+        "ml4keiba:Breeder": {
+            "@type": "@id"
+        },
+        "birthday": {
+            "@id": "ml4keiba:Birthday",
+            "@type": "@id"
+        },
+        "birthplace": {
+            "@id": "ml4keiba:Birthplace",
+            "@type": "@id"
+        },
+        "price": {
+            "@id": "ml4keiba:Price",
+            "@type": "@id"
+        },
+        "bounty": {
+            "@id": "ml4keiba:Bounty",
+            "@type": "@id"
+        },
+        "silks": {
+            "@id": "ml4keiba:Silks",
+            "@type": "@id"
+        },
+        "F": {
+            "@id": "ml4keiba:F",
+            "@type": "@id"
+        },
+        "M": {
+            "@id": "ml4keiba:M",
+            "@type": "@id"
+        },
+        "FF": {
+            "@id": "ml4keiba:FF",
+            "@type": "@id"
+        },
+        "FM": {
+            "@id": "ml4keiba:FM",
+            "@type": "@id"
+        },
+        "MF": {
+            "@id": "ml4keiba:MF",
+            "@type": "@id"
+        },
+        "MM": {
+            "@id": "ml4keiba:MM",
+            "@type": "@id"
+        },
+        "FFF": {
+            "@id": "ml4keiba:FFF",
+            "@type": "@id"
+        },
+        "FFM": {
+            "@id": "ml4keiba:FFM",
+            "@type": "@id"
+        },
+        "FMF": {
+            "@id": "ml4keiba:FMF",
+            "@type": "@id"
+        },
+        "FMM": {
+            "@id": "ml4keiba:FMM",
+            "@type": "@id"
+        },
+        "MFF": {
+            "@id": "ml4keiba:MFF",
+            "@type": "@id"
+        },
+        "MFM": {
+            "@id": "ml4keiba:MFM",
+            "@type": "@id"
+        },
+        "MMF": {
+            "@id": "ml4keiba:MMF",
+            "@type": "@id"
+        },
+        "MMM": {
+            "@id": "ml4keiba:MMM",
+            "@type": "@id"
+        },
+        "FFFF": {
+            "@id": "ml4keiba:FFFF",
+            "@type": "@id"
+        },
+        "FFFM": {
+            "@id": "ml4keiba:FFFM",
+            "@type": "@id"
+        },
+        "FFMF": {
+            "@id": "ml4keiba:FFMF",
+            "@type": "@id"
+        },
+        "FFMM": {
+            "@id": "ml4keiba:FFMM",
+            "@type": "@id"
+        },
+        "FMFF": {
+            "@id": "ml4keiba:FMFF",
+            "@type": "@id"
+        },
+        "FMFM": {
+            "@id": "ml4keiba:FMFM",
+            "@type": "@id"
+        },
+        "FMMF": {
+            "@id": "ml4keiba:FMMF",
+            "@type": "@id"
+        },
+        "FMMM": {
+            "@id": "ml4keiba:FMMM",
+            "@type": "@id"
+        },
+        "MFFF": {
+            "@id": "ml4keiba:MFFF",
+            "@type": "@id"
+        },
+        "MFFM": {
+            "@id": "ml4keiba:MFFM",
+            "@type": "@id"
+        },
+        "MFMF": {
+            "@id": "ml4keiba:MFMF",
+            "@type": "@id"
+        },
+        "MFMM": {
+            "@id": "ml4keiba:MFMM",
+            "@type": "@id"
+        },
+        "MMFF": {
+            "@id": "ml4keiba:MMFF",
+            "@type": "@id"
+        },
+        "MMFM": {
+            "@id": "ml4keiba:MMFM",
+            "@type": "@id"
+        },
+        "MMMF": {
+            "@id": "ml4keiba:MMMF",
+            "@type": "@id"
+        },
+        "MMMM": {
+            "@id": "ml4keiba:MMMM",
+            "@type": "@id"
+        },
+        "FFFFF": {
+            "@id": "ml4keiba:FFFFF",
+            "@type": "@id"
+        },
+        "FFFFM": {
+            "@id": "ml4keiba:FFFFM",
+            "@type": "@id"
+        },
+        "FFFMF": {
+            "@id": "ml4keiba:FFFMF",
+            "@type": "@id"
+        },
+        "FFFMM": {
+            "@id": "ml4keiba:FFFMM",
+            "@type": "@id"
+        },
+        "FFMFF": {
+            "@id": "ml4keiba:FFMFF",
+            "@type": "@id"
+        },
+        "FFMFM": {
+            "@id": "ml4keiba:FFMFM",
+            "@type": "@id"
+        },
+        "FFMMF": {
+            "@id": "ml4keiba:FFMMF",
+            "@type": "@id"
+        },
+        "FFMMM": {
+            "@id": "ml4keiba:FFMMM",
+            "@type": "@id"
+        },
+        "FMFFF": {
+            "@id": "ml4keiba:FMFFF",
+            "@type": "@id"
+        },
+        "FMFFM": {
+            "@id": "ml4keiba:FMFFM",
+            "@type": "@id"
+        },
+        "FMFMF": {
+            "@id": "ml4keiba:FMFMF",
+            "@type": "@id"
+        },
+        "FMFMM": {
+            "@id": "ml4keiba:FMFMM",
+            "@type": "@id"
+        },
+        "FMMFF": {
+            "@id": "ml4keiba:FMMFF",
+            "@type": "@id"
+        },
+        "FMMFM": {
+            "@id": "ml4keiba:FMMFM",
+            "@type": "@id"
+        },
+        "FMMMF": {
+            "@id": "ml4keiba:FMMMF",
+            "@type": "@id"
+        },
+        "FMMMM": {
+            "@id": "ml4keiba:FMMMM",
+            "@type": "@id"
+        },
+        "MFFFF": {
+            "@id": "ml4keiba:MFFFF",
+            "@type": "@id"
+        },
+        "MFFFM": {
+            "@id": "ml4keiba:MFFFM",
+            "@type": "@id"
+        },
+        "MFFMF": {
+            "@id": "ml4keiba:MFFMF",
+            "@type": "@id"
+        },
+        "MFFMM": {
+            "@id": "ml4keiba:MFFMM",
+            "@type": "@id"
+        },
+        "MFMFF": {
+            "@id": "ml4keiba:MFMFF",
+            "@type": "@id"
+        },
+        "MFMFM": {
+            "@id": "ml4keiba:MFMFM",
+            "@type": "@id"
+        },
+        "MFMMF": {
+            "@id": "ml4keiba:MFMMF",
+            "@type": "@id"
+        },
+        "MFMMM": {
+            "@id": "ml4keiba:MFMMM",
+            "@type": "@id"
+        },
+        "MMFFF": {
+            "@id": "ml4keiba:MMFFF",
+            "@type": "@id"
+        },
+        "MMFFM": {
+            "@id": "ml4keiba:MMFFM",
+            "@type": "@id"
+        },
+        "MMFMF": {
+            "@id": "ml4keiba:MMFMF",
+            "@type": "@id"
+        },
+        "MMFMM": {
+            "@id": "ml4keiba:MMFMM",
+            "@type": "@id"
+        },
+        "MMMFF": {
+            "@id": "ml4keiba:MMMFF",
+            "@type": "@id"
+        },
+        "MMMFM": {
+            "@id": "ml4keiba:MMMFM",
+            "@type": "@id"
+        },
+        "MMMMF": {
+            "@id": "ml4keiba:MMMMF",
+            "@type": "@id"
+        },
+        "MMMMM": {
+            "@id": "ml4keiba:MMMMM",
+            "@type": "@id"
+        }
+    }
+}
