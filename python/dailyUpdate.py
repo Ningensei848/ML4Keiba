@@ -24,6 +24,7 @@ load_dotenv()  # take environment variables from .env.
 
 ENDPOINT = os.environ.get("ENDPOINT")
 API_KEY = os.environ.get("API_KEY")
+PARALLEL_LIMIT = int(os.environ.get("PARALLEL_LIMIT", 12))
 
 pattern_race_id_in_list = re.compile(r".*race_id=(\w+)&?")
 
@@ -40,10 +41,10 @@ def main(date: int = None) -> List[str]:
     # 当日に開催されるレースの一覧を取得してリストを更新
     updateRaceList(race_today, yyyy, mm)
     # レースの情報を取得し保存，さらにレースに出走するすべての馬のID一覧を取得
-    horse_list = updateRaceAndGetHorseList(race_list=race_today, limit=12)
+    horse_list = updateRaceAndGetHorseList(race_list=race_today, limit=PARALLEL_LIMIT)
 
     # 馬ごとのIDをもとに，その馬のプロファイルと戦績を取得
-    processHorseData(horse_list=horse_list, limit=12)
+    processHorseData(horse_list=horse_list, limit=PARALLEL_LIMIT)
 
     # 昨日までに行われた結果の更新
     if date is None:
@@ -53,7 +54,7 @@ def main(date: int = None) -> List[str]:
     target = sum([yester.year * 10 ** 4, yester.month * 10 ** 2, yester.day])
     race_yesterday = getKaisaiList(target)
     # # レースの情報を取得し保存，さらにレースに出走するすべての馬のID一覧を取得
-    updateRaceAndGetHorseList(race_list=race_yesterday, target="result", limit=12)
+    updateRaceAndGetHorseList(race_list=race_yesterday, target="result", limit=PARALLEL_LIMIT)
 
     return
 
