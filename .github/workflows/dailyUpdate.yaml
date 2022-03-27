@@ -11,6 +11,8 @@ jobs:
         runs-on: ubuntu-latest
         name: 'Race List Update Daily'
         timeout-minutes: 10
+        env:
+            TZ: 'Asia/Tokyo'
         strategy:
             fail-fast: false
             matrix:
@@ -60,4 +62,3 @@ jobs:
                   git add .
                   git diff --cached --quiet || git commit -m "[GitHub Actions BOT] Update race list || $(date)" \
                   && git pull --rebase && git push
-  
