@@ -19,9 +19,11 @@
     "config:create": "npm run compile && node build/openapi.js",
     "config:deploy": "gcloud api-gateway api-configs create ${npm_config_name}-config --api=${npm_config_name} --project=${npm_config_project} --openapi-spec=openapi.yaml",
     "config:describe": "gcloud api-gateway api-configs describe ${npm_config_name}-config --api=${npm_config_name} --project=${npm_config_project}",
+    "config:delete": "gcloud api-gateway api-configs delete ${npm_config_name}-config --api=${npm_config_name} --project=${npm_config_project}",
     "gateway:create": "gcloud api-gateway gateways create ${npm_config_name}-gateway --api=${npm_config_name} --api-config=${npm_config_name}-config --location=asia-northeast1 --project=${npm_config_project}",
     "gateway:describe": "gcloud api-gateway gateways describe ${npm_config_name}-gateway --location=asia-northeast1 --project=${npm_config_project}",
     "gateway:describe:api": "gcloud api-gateway apis describe ${npm_config_name} --project=${npm_config_project}",
+    "gateway:delete": "gcloud api-gateway gateways delete ${npm_config_name}-gateway --location=asia-northeast1 --project=${npm_config_project}",
     "exec:all": "npm run function:deploy && npm run config:create && npm run config:deploy && npm run gateway:create"
   },
   "dependencies": {
