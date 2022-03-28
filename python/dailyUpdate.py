@@ -34,27 +34,37 @@ def main(date: int = None) -> List[str]:
     year, month, day = today.year * 10 ** 4, today.month * 10 ** 2, today.day
 
     target = year + month + day if date is None else date
-    race_today = getKaisaiList(target)
+
     yyyy = None if date is None else datetime.datetime.strptime(str(date), "%Y%m%d").strftime("%Y")
     mm = None if date is None else datetime.datetime.strptime(str(date), "%Y%m%d").strftime("%B")
 
+    race_today = getKaisaiList(target)
+
     # 当日に開催されるレースの一覧を取得してリストを更新
-    updateRaceList(race_today, yyyy, mm)
+    updateRaceList(race_today["jra"], yyyy, mm)
+    updateRaceList(race_today["nar"], yyyy, mm)
+
     # レースの情報を取得し保存，さらにレースに出走するすべての馬のID一覧を取得
-    horse_list = updateRaceAndGetHorseList(race_list=race_today, limit=PARALLEL_LIMIT)
+    # horse_list = updateRaceAndGetHorseList(race_list=race_today, limit=PARALLEL_LIMIT)
+    horse_list_jra = updateRaceAndGetHorseList(race_list=race_today["jra"], race="jra", limit=PARALLEL_LIMIT)
+    horse_list_nar = updateRaceAndGetHorseList(race_list=race_today["nar"], race="nar", limit=PARALLEL_LIMIT)
 
     # 馬ごとのIDをもとに，その馬のプロファイルと戦績を取得
+    horse_list = horse_list_jra + horse_list_nar
     processHorseData(horse_list=horse_list, limit=PARALLEL_LIMIT)
 
     # 昨日までに行われた結果の更新
-    if date is None:
+    # 日付が指定されていれば，更新せず終了
+    if date is not None:
         return  # 終了
 
     yester = today - datetime.timedelta(days=1)
     target = sum([yester.year * 10 ** 4, yester.month * 10 ** 2, yester.day])
     race_yesterday = getKaisaiList(target)
+
     # # レースの情報を取得し保存，さらにレースに出走するすべての馬のID一覧を取得
-    updateRaceAndGetHorseList(race_list=race_yesterday, target="result", limit=PARALLEL_LIMIT)
+    updateRaceAndGetHorseList(race_list=race_yesterday["jra"], race="jra", target="result", limit=PARALLEL_LIMIT)
+    updateRaceAndGetHorseList(race_list=race_yesterday["nar"], race="nar", target="result", limit=PARALLEL_LIMIT)
 
     return
 
@@ -111,17 +121,19 @@ def getKaisaiSourceNAR(kaisai_date: int) -> str:
     return "\n".join(sources)
 
 
-def getKaisaiList(kaisai_date: int) -> List[str]:
+def getKaisaiList(kaisai_date: int):
 
     jra = getKaisaiSource(kaisai_date)
     time.sleep(2 + uniform(1, 10) / 10)
     nar = getKaisaiSourceNAR(kaisai_date)
-    source = "\n".join([jra, nar])
 
-    ids = filter(lambda a: len(a), [getKaisaiRaceId(line) for line in source.split("\n")])
-    res = sorted(list(set(ids)))
+    jraIds = filter(lambda a: len(a), [getKaisaiRaceId(line) for line in jra.split("\n")])
+    narIds = filter(lambda a: len(a), [getKaisaiRaceId(line) for line in nar.split("\n")])
 
-    return res
+    return {
+        "jra": sorted(list(set(jraIds))),
+        "nar": sorted(list(set(narIds))),
+    }
 
 
 def updateRaceList(arr: List[str] = None, yyyy: str = None, mm: str = None) -> None:

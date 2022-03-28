@@ -455,7 +455,7 @@ async def _fetch(session, horse_id, coro):
     """
     horse_id = str(horse_id)
     res_top = await requestAsync(session, f"https://db.netkeiba.com/horse/{horse_id}")
-    time.sleep(2 + uniform(1, 10) / 10)
+    time.sleep(0.5 + uniform(1, 10) / 10)
     res_ped = await requestAsync(session, f"https://db.netkeiba.com/horse/ped/{horse_id}")
 
     return await coro(horse_id, res_top, res_ped)

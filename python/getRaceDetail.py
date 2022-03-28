@@ -3,9 +3,7 @@ import csv
 import os
 import re
 import sys
-import time
 from pathlib import Path
-from random import uniform
 
 import aiohttp
 import async_timeout
@@ -54,10 +52,10 @@ pattern_waku = re.compile(r"Waku")
 pattern_umaban = re.compile(r"Umaban")
 
 
-def main(race_list, target="shutuba", limit=3):
+def main(race_list, race="jra", target="shutuba", limit=3):
     os.environ["TARGET_TABLE"] = target
     # coroutine の返り値は 出走馬の一覧 (List[horse_id])
-    shutuba_list = execAsync(races=race_list, coro=coroutine, limit=limit)
+    shutuba_list = execAsync(races=race_list, coro=coroutine, race=race, limit=limit)
     shutuba_list = [race for race in shutuba_list if race is not None]
     horse_id_list = [row["horse_id"] for race in shutuba_list for row in race if row is not None and "horse_id" in row]
     return horse_id_list
@@ -69,24 +67,24 @@ async def coroutine(race_id, response):
         return
 
     content = await response.text(encoding=ENCODING)
-    time.sleep(2 + uniform(1, 10) / 10)
     soup = BeautifulSoup(content, "lxml")
     shutuba_list = [flattenShutubaList(row) for row in getShutubaList(soup)]
     outputShutubaList(race_id, shutuba_list)
     return shutuba_list
 
 
-async def _fetch(session, race_id, coro):
+async def _fetch(session, race_id, coro, race="jra"):
     """HTTPリソースからデータを取得しコルーチンを呼び出す
     :param session: aiohttp.ClientSessionインスタンス
     :param url: アクセス先のURL
     :param coro: urlとaiohttp.ClientResponseを引数に取るコルーチン
     :return: coroの戻り値
     """
+    raceDomain = "race" if race == "jra" else "nar"
     url = (
         f"https://db.netkeiba.com/race/{race_id}"
         if os.environ.get("TARGET_TABLE") == "result"
-        else f"https://race.netkeiba.com/race/shutuba.html?race_id={race_id}"
+        else f"https://{raceDomain}.netkeiba.com/race/shutuba.html?race_id={race_id}"
     )
     params = {"key": API_KEY, "url": url, "encoding": ENCODING}
     entrypoint = next(ENTRYPOINT)
@@ -100,7 +98,7 @@ async def _fetch(session, race_id, coro):
     return await coro(race_id, response)
 
 
-async def _bound_fetch(semaphore, race_id, session, coro):
+async def _bound_fetch(semaphore, race_id, session, coro, race):
     """並列処理数を制限しながらHTTPリソースを取得するコルーチン
     :param semaphore: 並列数を制御するためのSemaphore
     :param session: aiohttp.ClientSessionインスタンス
@@ -110,13 +108,13 @@ async def _bound_fetch(semaphore, race_id, session, coro):
     """
     async with semaphore:
         try:
-            return await _fetch(session, race_id, coro)
+            return await _fetch(session, race_id, coro, race)
         except asyncio.exceptions.TimeoutError as e:
             print(e, file=sys.stderr)
             return
 
 
-async def _run(races, coro, limit=1):
+async def _run(races, coro, race="jra", limit=3):
     """並列処理数を制限しながらHTTPリソースを取得するコルーチン
     :param urls: URLの一覧
     :param coro: urlとaiohttp.ClientResponseを引数に取るコルーチン
@@ -126,12 +124,14 @@ async def _run(races, coro, limit=1):
     semaphore = asyncio.Semaphore(limit)
     # [SSL: CERTIFICATE_VERIFY_FAILED]エラーを回避する
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
-        tasks = [asyncio.ensure_future(_bound_fetch(semaphore, race_id, session, coro)) for race_id in races]
+        tasks = [
+            asyncio.ensure_future(_bound_fetch(semaphore, race_id, session, coro, race=race)) for race_id in races
+        ]
         responses = await tqdm.gather(*tasks)  # wrapper for asyncio.gather
         return responses
 
 
-def execAsync(races, coro, limit=3):
+def execAsync(races, coro, race="jra", limit=3):
     """並列処理数を制限しながらHTTPリソースを取得し、任意の処理を行う
     :param urls: URLの一覧
     :param coro: urlとaiohttp.ClientResponseを引数に取る任意のコルーチン
@@ -139,7 +139,7 @@ def execAsync(races, coro, limit=3):
     :return: coroの戻り値のリスト。urlsと同順。
     """
     loop = asyncio.get_event_loop()
-    results = loop.run_until_complete(_run(races, coro, limit))
+    results = loop.run_until_complete(_run(races, coro, race, limit))
     return results
 
 
@@ -189,11 +189,20 @@ def processShutubaTag(row):
     res = {
         "waku": tag["waku"].get_text() if tag["waku"] is not None else None,
         "umaban": tag["umaban"].get_text() if tag["umaban"] is not None else None,
-        "horse": {"id": getId(tag["horse"].a["href"]), "name": tag["horse"].a["title"]},
+        "horse": {
+            "id": getId(tag["horse"].a["href"]) if tag["horse"] is not None else None,
+            "name": tag["horse"].a["title"] if tag["horse"] is not None else None,
+        },
         "barei": tag["barei"].get_text() if tag["barei"] is not None else None,
         "impost": tag["impost"].get_text() if tag["impost"] is not None else None,
-        "jockey": {"id": getId(tag["jockey"].a["href"]), "name": tag["jockey"].a["title"]},
-        "trainer": {"id": getId(tag["trainer"].a["href"]), "name": tag["trainer"].a["title"]},
+        "jockey": {
+            "id": getId(tag["jockey"].a["href"]) if tag["jockey"] is not None else None,
+            "name": tag["jockey"].a["title"] if tag["jockey"] is not None else None,
+        },
+        "trainer": {
+            "id": getId(tag["trainer"].a["href"]) if tag["trainer"] is not None else None,
+            "name": tag["trainer"].a["title"] if tag["trainer"] is not None else None,
+        },
         "weight": weight,  # tag["weight"].get_text().strip()
         "gain": gain
         # odds, ninki はJS側で処理しているらしく，単純なリクエストでは取得できない
@@ -251,7 +260,7 @@ def getShutubaList(soup):
     # `/race/shutuba.html?race_id=YYYYPPNNDDRR`
     # table.Shutuba_Table を取得する
     if os.environ.get("TARGET_TABLE") == "result":
-        table = soup.find("table")
+        table = soup.find("table", id="All_Result_Table")
         if table is None:
             return []
 
@@ -260,7 +269,7 @@ def getShutubaList(soup):
 
         return [processResultTag(row, headers) for row in rows[1:] if row is not None]
     else:
-        table = soup.find("table", class_="Shutuba_Table")
+        table = soup.find("table", class_="ShutubaTable")
 
         if table is None:
             return []
@@ -308,15 +317,19 @@ if __name__ == "__main__":
 
     args = sys.argv
 
-    race_list = args[1:]
+    race_domain = args[1]
+    race_list = args[2:]
+
+    if race_domain not in ["jra", "nar"]:
+        print("Please specify `jra` or `nar` for first argument")
+        sys.exit(1)
 
     if len(race_list) == 0:
-        print("Please specify ID(s) as argument")
+        print("Please specify ID(s) as second arguments")
         sys.exit(1)
 
     # coroutine の返り値は 出走馬の一覧 (List[horse_id])
-    shutuba_list = execAsync(races=race_list, coro=coroutine)
-
+    shutuba_list = execAsync(races=race_list, coro=coroutine, race=race_domain)
     shutuba_list = [race for race in shutuba_list if race is not None]
 
     horse_id_list = [row["horse_id"] for race in shutuba_list for row in race if row is not None and "horse_id" in row]
