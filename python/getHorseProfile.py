@@ -68,39 +68,6 @@ TRANSLATE_DICT = {
     "獲得賞金": "bounty",
 }
 
-RESULT_HEADER = [
-    # result = getHorseResult(soup)
-    # for res in result:
-    #     for key in res.keys():
-    #         print(f'"{key}",')
-    "日付",
-    "天気",
-    "R",
-    "頭数",
-    "枠番",
-    "馬番",
-    "オッズ",
-    "人気",
-    "着順",
-    "斤量",
-    "馬場",
-    "タイム",
-    "着差",
-    "通過",
-    "ペース",
-    "上り",
-    "place",
-    "race_id",
-    "race_name",
-    "movie",
-    "jockey",
-    "field",
-    "distance",
-    "weight",
-    "gain",
-    "bounty",
-]
-
 # regexp
 
 pattern_waku = re.compile(r"Waku")
@@ -165,7 +132,8 @@ def processHorseResult(row, thead):
         "race_id": getId(temp["レース名"].a["href"]) if temp["レース名"].find("a") else None,
         "race_name": temp["レース名"].get_text() if temp["レース名"].find("a") else None,
         "movie": getId(temp["映像"].a["href"]) if temp["映像"].find("a") else None,
-        "jockey": getId(temp["騎手"].a["href"]) if temp["騎手"].find("a") else None,
+        "jockey_id": getId(temp["騎手"].a["href"]) if temp["騎手"].find("a") else None,
+        "jockey_name": temp["騎手"].a.get_text().strip() if temp["騎手"].find("a") else None,
         "field": re.sub(r"\d", "", temp["距離"].get_text()) if len(temp["距離"].get_text()) else None,
         "distance": re.sub(r"[^\d]", "", temp["距離"].get_text()) if len(temp["距離"].get_text()) else None,
         "weight": weight,
@@ -396,10 +364,11 @@ def outputHorseResult(horse_id, result):
     yyyy, xxxx, zz = horse_id[:4], horse_id[4:8], horse_id[8:]
     filepath = cwd / "data" / "horse" / "csv" / "result" / yyyy / xxxx / f"{zz}.tsv"
     filepath.parent.mkdir(parents=True, exist_ok=True)  # 遡って親ディレクトリを作成
+    headers = list(result[0].keys())
     # 書き込み
     with filepath.open(mode="w", encoding="utf-8") as f:
         writer = csv.writer(f, delimiter="\t")
-        writer.writerow(RESULT_HEADER)
+        writer.writerow(headers)
         writer.writerows([list(r.values()) for r in result])
 
     return
