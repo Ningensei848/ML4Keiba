@@ -54,6 +54,7 @@ jobs:
               env:
                   ENDPOINT: ${{ secrets.GCP_ENDPOINT }}
                   API_KEY: ${{ secrets.GCP_API_KEY }}
+                  PARALLEL_LIMIT: ${{ secrets.PARALLEL_LIMIT }}
 
             - name: Git commit by BOT
               run: |
