@@ -119,7 +119,17 @@ def getHorseResult(soup):
         return
 
     thead = [th.get_text().strip() for th in db_h_race_results.thead.find_all("th")]
-    return [processHorseResult(row, thead) for row in db_h_race_results.tbody.find_all("tr")]
+    ret = [wrapProcessHorseResult(row, thead) for row in db_h_race_results.tbody.find_all("tr")]
+
+    return [x for x in ret if x is not None]
+
+
+def wrapProcessHorseResult(row, thead):
+    try:
+        return processHorseResult(row, thead)
+    except Exception as e:
+        print(e, file=sys.stderr)
+        return None
 
 
 def processHorseResult(row, thead):
