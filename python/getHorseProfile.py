@@ -28,6 +28,15 @@ from libs.entrypoint import generateEntrypoints
 from libs.validate import is_num
 from tqdm.asyncio import tqdm
 
+
+# サーバへの負荷が高すぎるときは wait を入れる ------------------
+def wait():
+    time.sleep(0.25 + uniform(1, 10) / 10)
+
+
+# -----------------------------------------------------------
+
+
 # from typing import Dict, List, Set, Tuple
 
 
@@ -36,6 +45,12 @@ load_dotenv()  # take environment variables from .env.
 ENDPOINT = os.environ.get("ENDPOINT")
 API_KEY = os.environ.get("API_KEY")
 ENCODING = os.environ.get("ENCODING")
+PARALLEL_LIMIT = int(os.environ.get("PARALLEL_LIMIT"))
+if not PARALLEL_LIMIT > 0:
+    print(f"Please specify a number greater than or equal to 1: current value is `{str(PARALLEL_LIMIT)}`")
+
+LIMIT_ENABLED = bool(int(float(PARALLEL_LIMIT)) if is_num(PARALLEL_LIMIT) else PARALLEL_LIMIT)
+
 
 CONTEXT_JSONLD = (
     "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/context.jsonld"  # @param {type:"string"}
@@ -434,7 +449,7 @@ async def _fetch(session, horse_id, coro):
     """
     horse_id = str(horse_id)
     res_top = await requestAsync(session, f"https://db.netkeiba.com/horse/{horse_id}")
-    time.sleep(0.5 + uniform(1, 10) / 10)
+    wait()
     res_ped = await requestAsync(session, f"https://db.netkeiba.com/horse/ped/{horse_id}")
 
     return await coro(horse_id, res_top, res_ped)
@@ -467,7 +482,12 @@ async def _run(horse_list, coro, limit=1):
     semaphore = asyncio.Semaphore(limit)
     # [SSL: CERTIFICATE_VERIFY_FAILED]エラーを回避する
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
-        tasks = [asyncio.ensure_future(_bound_fetch(semaphore, horse_id, session, coro)) for horse_id in horse_list]
+        tasks = (
+            [asyncio.ensure_future(_bound_fetch(semaphore, horse_id, session, coro)) for horse_id in horse_list]
+            if LIMIT_ENABLED  # 同時実行数が制限されていれば ↑，そうでなければ ↓
+            else [asyncio.ensure_future(_fetch(session, horse_id, coro)) for horse_id in horse_list]
+        )
+
         responses = await tqdm.gather(*tasks)  # wrapper for asyncio.gather
         return responses
 
