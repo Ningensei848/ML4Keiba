@@ -18,6 +18,8 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from getHorseProfile import main as processHorseData
 from getRaceDetail import main as updateRaceAndGetHorseList
+from libs.filter import filteringDuplicated
+from libs.validate import is_num
 from tqdm import tqdm
 
 load_dotenv()  # take environment variables from .env.
@@ -25,6 +27,10 @@ load_dotenv()  # take environment variables from .env.
 ENDPOINT = os.environ.get("ENDPOINT")
 API_KEY = os.environ.get("API_KEY")
 PARALLEL_LIMIT = int(os.environ.get("PARALLEL_LIMIT", 12))
+isBulk = os.environ.get("IS_BULK", False)
+IS_BULK = bool(int(float(isBulk)) if is_num(isBulk) else isBulk)
+print(f"Bulk execution: {str(IS_BULK)}")
+
 
 pattern_race_id_in_list = re.compile(r".*race_id=(\w+)&?")
 
@@ -48,6 +54,11 @@ def main(date: int = None) -> List[str]:
     # horse_list = updateRaceAndGetHorseList(race_list=race_today, limit=PARALLEL_LIMIT)
     horse_list_jra = updateRaceAndGetHorseList(race_list=race_today["jra"], race="jra", limit=PARALLEL_LIMIT)
     horse_list_nar = updateRaceAndGetHorseList(race_list=race_today["nar"], race="nar", limit=PARALLEL_LIMIT)
+
+    # 大量に処理している場合，すでに処理してある horse_id を取り除く（重複処理をへらす）
+    if IS_BULK:
+        horse_list_jra = filteringDuplicated(horse_list_jra)
+        horse_list_nar = filteringDuplicated(horse_list_nar)
 
     # 馬ごとのIDをもとに，その馬のプロファイルと戦績を取得
     horse_list = horse_list_jra + horse_list_nar
