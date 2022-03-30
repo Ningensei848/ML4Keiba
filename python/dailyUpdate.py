@@ -57,8 +57,13 @@ def main(date: int = None) -> List[str]:
 
     # レースの情報を取得し保存，さらにレースに出走するすべての馬のID一覧を取得
     # horse_list = updateRaceAndGetHorseList(race_list=race_today, limit=PARALLEL_LIMIT)
-    horse_list_jra = updateRaceAndGetHorseList(race_list=race_today["jra"], race="jra", limit=PARALLEL_LIMIT)
-    horse_list_nar = updateRaceAndGetHorseList(race_list=race_today["nar"], race="nar", limit=PARALLEL_LIMIT)
+    target = os.environ.get("RACE_TARGET_TABLE", "shutuba")
+    horse_list_jra = updateRaceAndGetHorseList(
+        race_list=race_today["jra"], race="jra", target=target, limit=PARALLEL_LIMIT
+    )
+    horse_list_nar = updateRaceAndGetHorseList(
+        race_list=race_today["nar"], race="nar", target=target, limit=PARALLEL_LIMIT
+    )
 
     # 大量に処理している場合，すでに処理してある horse_id を取り除く（重複処理をへらす）
     if IS_BULK:

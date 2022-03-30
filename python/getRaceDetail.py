@@ -159,6 +159,18 @@ def getWeight(text):
         return text, None
 
 
+def getIdAndName(tag, key):
+    if tag[key] is None:
+        id_, name = None, None
+    elif tag[key].find("a") is None:
+        id_, name = None, tag[key].get_text()
+    else:
+        id_ = getId(tag[key].a["href"])
+        name = tag[key].a["title"]
+
+    return id_, name
+
+
 def processShutubaTag(row):
 
     if row is None:
@@ -186,23 +198,18 @@ def processShutubaTag(row):
         else (None, None)
     )
 
+    horse_id, horse_name = getIdAndName(tag, "horse")
+    jockey_id, jockey_name = getIdAndName(tag, "jockey")
+    trainer_id, trainer_name = getIdAndName(tag, "trainer")
+
     res = {
         "waku": tag["waku"].get_text() if tag["waku"] is not None else None,
         "umaban": tag["umaban"].get_text() if tag["umaban"] is not None else None,
-        "horse": {
-            "id": getId(tag["horse"].a["href"]) if tag["horse"] is not None else None,
-            "name": tag["horse"].a["title"] if tag["horse"] is not None else None,
-        },
+        "horse": {"id": horse_id, "name": horse_name},
         "barei": tag["barei"].get_text() if tag["barei"] is not None else None,
         "impost": tag["impost"].get_text() if tag["impost"] is not None else None,
-        "jockey": {
-            "id": getId(tag["jockey"].a["href"]) if tag["jockey"] is not None else None,
-            "name": tag["jockey"].a["title"] if tag["jockey"] is not None else None,
-        },
-        "trainer": {
-            "id": getId(tag["trainer"].a["href"]) if tag["trainer"] is not None else None,
-            "name": tag["trainer"].a["title"] if tag["trainer"] is not None else None,
-        },
+        "jockey": {"id": jockey_id, "name": jockey_name},
+        "trainer": {"id": trainer_id, "name": trainer_name},
         "weight": weight,  # tag["weight"].get_text().strip()
         "gain": gain
         # odds, ninki はJS側で処理しているらしく，単純なリクエストでは取得できない
