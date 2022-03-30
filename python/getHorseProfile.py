@@ -399,15 +399,21 @@ def outputHorseResult(horse_id, result):
     return
 
 
-async def coroutine(horse_id, res_top, res_ped):
+async def coroutine(horse_id, res_top: aiohttp.ClientResponse, res_ped: aiohttp.ClientResponse):
 
     if res_top is None or res_ped is None:
         return
 
-    content_top = await res_top.text(encoding=ENCODING)
-    content_ped = await res_ped.text(encoding=ENCODING)
+    content_top = await res_top.text(encoding=ENCODING, errors="surrogateescape")
+    content_ped = await res_ped.text(encoding=ENCODING, errors="surrogateescape")
 
-    meta = getHorseMeta(BeautifulSoup(content_top, "lxml"))
+    try:
+        meta = getHorseMeta(BeautifulSoup(content_top, "lxml"))
+    except Exception as e:
+        print(e, file=sys.stderr)
+        content_top = await res_top.text(encoding=ENCODING, errors="backslashreplace")
+        meta = getHorseMeta(BeautifulSoup(content_top, "lxml"))
+
     ped = getHorsePed(BeautifulSoup(content_ped, "lxml"))
 
     if meta is None or ped is None:
@@ -426,7 +432,7 @@ async def coroutine(horse_id, res_top, res_ped):
     return
 
 
-async def requestAsync(session, url):
+async def requestAsync(session: aiohttp.ClientSession, url):
     params = {"key": API_KEY, "url": url, "encoding": ENCODING}
     entrypoint = next(ENTRYPOINT)
     url = f"{ENDPOINT}/{entrypoint}"
@@ -440,7 +446,7 @@ async def requestAsync(session, url):
     return response
 
 
-async def _fetch(session, horse_id, coro):
+async def _fetch(session: aiohttp.ClientSession, horse_id, coro):
     """HTTPリソースからデータを取得しコルーチンを呼び出す
     :param session: aiohttp.ClientSessionインスタンス
     :param horse_id: アクセス先の horse_id
@@ -455,7 +461,7 @@ async def _fetch(session, horse_id, coro):
     return await coro(horse_id, res_top, res_ped)
 
 
-async def _bound_fetch(semaphore, horse_id, session, coro):
+async def _bound_fetch(semaphore, horse_id, session: aiohttp.ClientSession, coro):
     """並列処理数を制限しながらHTTPリソースを取得するコルーチン
     :param semaphore: 並列数を制御するためのSemaphore
     :param session: aiohttp.ClientSessionインスタンス
