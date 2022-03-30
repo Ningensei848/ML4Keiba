@@ -93,7 +93,20 @@ pattern_english_name = re.compile(r"\(.+\)")
 
 
 def getId(url: str) -> str:
-    return url.strip("/").split("/")[-1]
+
+    if type(url) is int:
+        return str(url)
+
+    if type(url) is not str:
+        return None
+
+    res = url.strip("/").split("/")[-1]
+    if len(res) < 1:
+        return None
+
+    id_ = res.split("=")[-1]
+
+    return id_
 
 
 def getWeight(text):
