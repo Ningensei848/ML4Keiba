@@ -68,7 +68,7 @@ async def coroutine(race_id, response):
 
     content = await response.text(encoding=ENCODING)
     soup = BeautifulSoup(content, "lxml")
-    shutuba_list = [flattenShutubaList(row) for row in getShutubaList(soup)]
+    shutuba_list = [flattenShutubaList(row) for row in getShutubaList(soup) if type(row) is dict]
     outputShutubaList(race_id, shutuba_list)
     return shutuba_list
 
@@ -144,7 +144,20 @@ def execAsync(races, coro, race="jra", limit=3):
 
 
 def getId(url: str) -> str:
-    return url.strip("/").split("/")[-1]
+
+    if type(url) is int:
+        return str(url)
+
+    if type(url) is not str:
+        return None
+
+    res = url.strip("/").split("/")[-1]
+    if len(res) < 1:
+        return None
+
+    id_ = res.split("=")[-1]
+
+    return id_
 
 
 def getWeight(text):
@@ -227,13 +240,16 @@ def processShutubaTag(row):
 
 
 def processResultTag(row, headers):
-    if row is None:
+    if row is None or not row.find("td"):
         return
 
     temp = {}
     for th, td in zip(headers, row.find_all("td")):
         if td.find("a"):
-            temp[th] = {"id": getId(td.a["href"]), "name": td.a["title"]}
+            temp[th] = {
+                "id": getId(td.a["href"]) if td.has_attr("href") else None,
+                "name": td.a["title"] if td.has_attr("title") else td.a.get_text().strip(),
+            }
         else:
             temp[th] = td.get_text().strip()
 
@@ -269,7 +285,7 @@ def getShutubaList(soup):
     # `/race/shutuba.html?race_id=YYYYPPNNDDRR`
     # table.Shutuba_Table を取得する
     if os.environ.get("TARGET_TABLE") == "result":
-        table = soup.find("table", id="All_Result_Table")
+        table = soup.find("table")
         if table is None:
             return []
 
