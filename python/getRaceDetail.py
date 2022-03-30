@@ -66,8 +66,13 @@ async def coroutine(race_id, response):
     if response is None:
         return
 
-    content = await response.text(encoding=ENCODING)
-    soup = BeautifulSoup(content, "lxml")
+    try:
+        content = await response.text(encoding=ENCODING, errors="surrogateescape")
+        soup = BeautifulSoup(content, "lxml")
+    except Exception as e:
+        print(e, file=sys.stderr)
+        content = await response.text(encoding=ENCODING, errors="backslashreplace")
+        soup = BeautifulSoup(content, "lxml")
     shutuba_list = [flattenShutubaList(row) for row in getShutubaList(soup) if type(row) is dict]
     outputShutubaList(race_id, shutuba_list)
     return shutuba_list
