@@ -42,7 +42,7 @@ pattern_race_id_in_list = re.compile(r".*race_id=(\w+)&?")
 
 def main(date: int = None) -> List[str]:
     today = datetime.date.today()
-    year, month, day = today.year * 10 ** 4, today.month * 10 ** 2, today.day
+    year, month, day = today.year * 10**4, today.month * 10**2, today.day
 
     target = year + month + day if date is None else date
 
@@ -80,7 +80,7 @@ def main(date: int = None) -> List[str]:
         return  # 終了
 
     yester = today - datetime.timedelta(days=1)
-    target = sum([yester.year * 10 ** 4, yester.month * 10 ** 2, yester.day])
+    target = sum([yester.year * 10**4, yester.month * 10**2, yester.day])
     race_yesterday = getKaisaiList(target)
 
     # # レースの情報を取得し保存，さらにレースに出走するすべての馬のID一覧を取得

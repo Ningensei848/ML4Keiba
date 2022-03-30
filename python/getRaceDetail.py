@@ -168,6 +168,8 @@ def getIdAndName(tag, key):
         id_ = getId(tag[key].a["href"])
         name = tag[key].a["title"]
 
+    name = name.strip() if type(name) is str else name
+
     return id_, name
 
 
