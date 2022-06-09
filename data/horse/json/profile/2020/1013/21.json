@@ -2,7 +2,7 @@
   "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/context.jsonld",
   "@id": "horse:2020101321",
   "@type": "ml4keiba:Horse",
-  "name": "ヴェニスクィーン",
+  "name": "□地ヴェニスクィーン",
   "status": null,
   "sex": "牝",
   "color": "栗毛",
@@ -10,11 +10,20 @@
     "first": "0",
     "second": "0",
     "third": "0",
-    "others": "0"
+    "others": "1"
   },
   "birthday": "2020/03/01",
-  "trainer": null,
-  "owner": null,
+  "trainer": {
+    "@id": "trainer:a03d6",
+    "@type": "ml4keiba:Trainer",
+    "name": "森山雄大"
+  },
+  "owner": {
+    "@id": "owner:112008",
+    "@type": "ml4keiba:Owner",
+    "name": "沖田方子",
+    "silks": "https://cdn.netkeiba.com/img//db/colours/no_data.gif"
+  },
   "breeder": {
     "@id": "breeder:203347",
     "@type": "ml4keiba:Breeder",
