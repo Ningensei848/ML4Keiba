@@ -2,7 +2,7 @@
   "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/context.jsonld",
   "@id": "horse:2020100101",
   "@type": "ml4keiba:Horse",
-  "name": "サブリュウシン",
+  "name": "□地サブリュウシン",
   "status": null,
   "sex": "牡",
   "color": "鹿毛",
@@ -10,11 +10,20 @@
     "first": "0",
     "second": "0",
     "third": "0",
-    "others": "0"
+    "others": "1"
   },
   "birthday": "2020/05/20",
-  "trainer": null,
-  "owner": null,
+  "trainer": {
+    "@id": "trainer:05311",
+    "@type": "ml4keiba:Trainer",
+    "name": "角川秀樹"
+  },
+  "owner": {
+    "@id": "owner:907031",
+    "@type": "ml4keiba:Owner",
+    "name": "渡部賢治",
+    "silks": "https://cdn.netkeiba.com/img//db/colours/no_data.gif"
+  },
   "breeder": {
     "@id": "breeder:633094",
     "@type": "ml4keiba:Breeder",

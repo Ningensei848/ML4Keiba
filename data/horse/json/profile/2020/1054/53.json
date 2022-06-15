@@ -2,7 +2,7 @@
   "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/context.jsonld",
   "@id": "horse:2020105453",
   "@type": "ml4keiba:Horse",
-  "name": "レインボーグレース",
+  "name": "□地レインボーグレース",
   "status": null,
   "sex": "牝",
   "color": "鹿毛",
@@ -10,11 +10,20 @@
     "first": "0",
     "second": "0",
     "third": "0",
-    "others": "0"
+    "others": "1"
   },
   "birthday": "2020/05/15",
-  "trainer": null,
-  "owner": null,
+  "trainer": {
+    "@id": "trainer:a02e5",
+    "@type": "ml4keiba:Trainer",
+    "name": "小国博行"
+  },
+  "owner": {
+    "@id": "owner:100008",
+    "@type": "ml4keiba:Owner",
+    "name": "原大栄",
+    "silks": "https://cdn.netkeiba.com/img//db/colours/no_data.gif"
+  },
   "breeder": {
     "@id": "breeder:910204",
     "@type": "ml4keiba:Breeder",

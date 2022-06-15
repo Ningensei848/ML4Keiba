@@ -2,19 +2,28 @@
   "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/context.jsonld",
   "@id": "horse:2020101189",
   "@type": "ml4keiba:Horse",
-  "name": "ディオスメッセージ",
+  "name": "□地ディオスメッセージ",
   "status": null,
   "sex": "牡",
   "color": "鹿毛",
   "result": {
-    "first": "0",
+    "first": "1",
     "second": "0",
     "third": "0",
     "others": "0"
   },
   "birthday": "2020/02/15",
-  "trainer": null,
-  "owner": null,
+  "trainer": {
+    "@id": "trainer:05301",
+    "@type": "ml4keiba:Trainer",
+    "name": "村上正和"
+  },
+  "owner": {
+    "@id": "owner:138008",
+    "@type": "ml4keiba:Owner",
+    "name": "山口明彦",
+    "silks": "https://cdn.netkeiba.com/img//db/colours/no_data.gif"
+  },
   "breeder": {
     "@id": "breeder:330368",
     "@type": "ml4keiba:Breeder",
@@ -22,7 +31,7 @@
   },
   "birthplace": "平取町",
   "price": null,
-  "bounty": 0.0,
+  "bounty": 300.0,
   "F": {
     "@id": "horse:000a011fed",
     "@type": "ml4keiba:Horse",

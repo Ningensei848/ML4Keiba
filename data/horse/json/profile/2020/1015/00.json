@@ -2,7 +2,7 @@
   "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/context.jsonld",
   "@id": "horse:2020101500",
   "@type": "ml4keiba:Horse",
-  "name": "グランポデール",
+  "name": "□地グランポデール",
   "status": null,
   "sex": "牡",
   "color": "鹿毛",
@@ -10,11 +10,20 @@
     "first": "0",
     "second": "0",
     "third": "0",
-    "others": "0"
+    "others": "1"
   },
   "birthday": "2020/02/18",
-  "trainer": null,
-  "owner": null,
+  "trainer": {
+    "@id": "trainer:a0372",
+    "@type": "ml4keiba:Trainer",
+    "name": "佐々木国"
+  },
+  "owner": {
+    "@id": "owner:222008",
+    "@type": "ml4keiba:Owner",
+    "name": "伊達泰明",
+    "silks": "https://cdn.netkeiba.com/img//db/colours/no_data.gif"
+  },
   "breeder": {
     "@id": "breeder:935496",
     "@type": "ml4keiba:Breeder",

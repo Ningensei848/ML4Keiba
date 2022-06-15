@@ -2,7 +2,7 @@
   "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/context.jsonld",
   "@id": "horse:2020109007",
   "@type": "ml4keiba:Horse",
-  "name": "ギャクテンオー",
+  "name": "□地ギャクテンオー",
   "status": null,
   "sex": "牡",
   "color": "鹿毛",
@@ -10,11 +10,20 @@
     "first": "0",
     "second": "0",
     "third": "0",
-    "others": "0"
+    "others": "1"
   },
   "birthday": "2020/03/26",
-  "trainer": null,
-  "owner": null,
+  "trainer": {
+    "@id": "trainer:05465",
+    "@type": "ml4keiba:Trainer",
+    "name": "田辺陽一"
+  },
+  "owner": {
+    "@id": "owner:333031",
+    "@type": "ml4keiba:Owner",
+    "name": "大田恭充",
+    "silks": "https://cdn.netkeiba.com/img//db/colours/333031.gif"
+  },
   "breeder": {
     "@id": "breeder:433143",
     "@type": "ml4keiba:Breeder",
@@ -22,7 +31,7 @@
   },
   "birthplace": "青森県",
   "price": "165万円 (2021年 八戸市場)",
-  "bounty": 0.0,
+  "bounty": 27.0,
   "F": {
     "@id": "horse:2008103206",
     "@type": "ml4keiba:Horse",

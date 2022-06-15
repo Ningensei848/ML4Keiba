@@ -2,7 +2,7 @@
   "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/context.jsonld",
   "@id": "horse:2020106098",
   "@type": "ml4keiba:Horse",
-  "name": "イッツオーケイ",
+  "name": "□地イッツオーケイ",
   "status": null,
   "sex": "牝",
   "color": "鹿毛",
@@ -10,11 +10,20 @@
     "first": "0",
     "second": "0",
     "third": "0",
-    "others": "0"
+    "others": "1"
   },
   "birthday": "2020/03/27",
-  "trainer": null,
-  "owner": null,
+  "trainer": {
+    "@id": "trainer:a0372",
+    "@type": "ml4keiba:Trainer",
+    "name": "佐々木国"
+  },
+  "owner": {
+    "@id": "owner:903031",
+    "@type": "ml4keiba:Owner",
+    "name": "矢野琢也",
+    "silks": "https://cdn.netkeiba.com/img//db/colours/903031.gif"
+  },
   "breeder": {
     "@id": "breeder:640482",
     "@type": "ml4keiba:Breeder",

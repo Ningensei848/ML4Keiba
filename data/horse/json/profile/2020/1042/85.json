@@ -2,19 +2,28 @@
   "@context": "https://raw.githubusercontent.com/Ningensei848/ML4Keiba/main/context.jsonld",
   "@id": "horse:2020104285",
   "@type": "ml4keiba:Horse",
-  "name": "ラーテル",
+  "name": "□地ラーテル",
   "status": null,
   "sex": "牡",
   "color": "芦毛",
   "result": {
-    "first": "0",
+    "first": "1",
     "second": "0",
     "third": "0",
     "others": "0"
   },
   "birthday": "2020/04/03",
-  "trainer": null,
-  "owner": null,
+  "trainer": {
+    "@id": "trainer:05552",
+    "@type": "ml4keiba:Trainer",
+    "name": "高月賢一"
+  },
+  "owner": {
+    "@id": "owner:994002",
+    "@type": "ml4keiba:Owner",
+    "name": "飯田正剛",
+    "silks": "https://cdn.netkeiba.com/img//db/colours/994002.gif"
+  },
   "breeder": {
     "@id": "breeder:633301",
     "@type": "ml4keiba:Breeder",
@@ -22,7 +31,7 @@
   },
   "birthplace": "新ひだか町",
   "price": "1,155万円 (2021年 北海道サマーセール)",
-  "bounty": 0.0,
+  "bounty": 270.0,
   "F": {
     "@id": "horse:2011103328",
     "@type": "ml4keiba:Horse",
